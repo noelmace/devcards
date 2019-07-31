@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <style>
+      dc-flashcard {
+        --question-bgcolor: #F0FFFF;
+        --question-color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Flashcard Demo</h1>
+    <div style="width: 300px">
+      <dc-flashcard>
+        <div slot="question">
+          What's the purpose of Web Components?
+        </div>
+        <ul slot="answer">
+          <li>create <strong>reusable</strong> components</li>
+          <li>w/ vanilla JS/HTML/CSS only!</li>
+          <li>without fear of code collisions</li>
+        </ul>
+      </dc-flashcard>
+    </div>
+    <script type="module" src="flashcard.js"></script>
+  </body>
+</html>

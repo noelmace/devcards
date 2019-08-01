@@ -1,0 +1,14 @@
+[
+  {
+    "question": "What's the purpose of Web Components ?",
+    "answer": "<ul><li>create <strong>reusable</strong> components</li><li>w/ vanilla JS/HTML/CSS only!</li><li>without fear of code collisions</li></ul>"
+  },
+  {
+    "question": "What are the 3 main technologies behind Web Components?",
+    "answer": "<ul><li>Custom elements</li><li>Shadow DOM</li><li>HTML Templates</li></ul>"
+  },
+  {
+    "question": "What are the usual steps required to define a Web Component?",
+    "answer": "<ol><li><strong>Create a class or a function</strong> in which you specify your web component <strong>functionality</strong></li><li><strong>register</strong> your custom element</li><li><em>(optional)</em> <strong>attach a shadow DOM</strong> to the custom element</li><li><em>(optional)</em> <strong>define an HTML template</strong> using <code>&lt;template&gt;</code> and <code>&lt;slot&gt;</code>, <strong>clone</strong> the template and <strong>attach it</strong> toyour shadow DOM.</li></ol>"
+  }
+]

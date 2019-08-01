@@ -13,6 +13,12 @@ customElements.define(
     constructor() {
       super();
 
+      /**
+       * true if the collection attribute match the rendered flashcards
+       * @type {Boolean}
+       */
+      this.areCardsRendered = false;
+
       const shadowRoot = this.attachShadow({ mode: 'open' });
 
       const style = document.createElement('style');
@@ -39,6 +45,59 @@ customElements.define(
       shadowRoot.appendChild(this.container);
     }
 
+
+    /**
+     * mandatory `collection` attribute
+     * name of the flashcard collection to retrieve & render
+     * @type {String}
+     */
+    get collection() {
+      return this.getAttribute('collection');
+    }
+
+    /**
+     * @private
+     */
+    static get observedAttributes() {
+      return ['collection'];
+    }
+
+    /**
+     * update the flashcards collection when the attribute value changes
+     * @private
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name === 'collection') {
+        this.updateCards();
+      }
+    }
+
+    /**
+     * retrieve the flashcard
+     * @private
+     */
+    connectedCallback() {
+      if (!this.areCardsRendered) {
+        this.updateCards();
+      }
+    }
+
+    /**
+     * fetch & render the collection of flashcards
+     * @private
+     */
+    updateCards() {
+      this.areCardsRendered = false;
+      this.classList.add('loading');
+      this.fetchCards(this.collection)
+        .then(cards => this.renderCards(cards))
+        .then(() => {
+          this.classList.remove('loading');
+          this.areCardsRendered = true;
+        })
+
+    }
+
     /**
      * fetch a flashcards json file
      * @private
@@ -59,7 +118,7 @@ customElements.define(
         console.error('no cards could be found');
       }
 
-      return cards;
+      return cards
     }
 
     /**
@@ -84,10 +143,6 @@ customElements.define(
         this.flashcardsContainer.appendChild(flashcard);
       });
       this.flashcardsContainer.style.paddingTop = cards.length * 5 + 'px';
-    }
-
-    connectedCallback() {
-      this.fetchCards('wc-intro').then(cards => this.renderCards(cards));
     }
   }
 );

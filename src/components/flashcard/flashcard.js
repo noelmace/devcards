@@ -14,10 +14,14 @@ customElements.define(
         .container {
           padding: 5px;
           perspective: 5000px;
+          height: calc(100% - 10px);
+          width: calc(100% - 10px);
         }
 
         .flashcard {
           display: grid;
+          height: 100%;
+          width: 100%;
           transition: transform .8s;
           transform-style: preserve-3d;
           transform-origin: center right;

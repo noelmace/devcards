@@ -8,7 +8,17 @@
  *  `
  */
 export function css(strings, ...keys) {
-  return strings.reduce((rslt, str, i) => `${rslt}${keys[i]}`)
+  let acc = '';
+  const smallerLength = Math.min(strings.length, keys.length);
+  for (let i = 0; i < smallerLength; i++) {
+    acc += strings[i] + keys[i];
+  }
+  if (strings.length > keys.length) {
+    return acc + strings[strings.length - 1];
+  } else if (keys.length < strings.length) {
+    return acc + keys[keys.length - 1];
+  }
+  return acc;
 }
 
 /**
@@ -20,6 +30,4 @@ export function css(strings, ...keys) {
  *    <div>Hello World!</div>
  *  `
  */
-export function html(strings, ...keys) {
-  return strings.reduce((rslt, str, i) => `${rslt}${keys[i]}`)
-}
+export {css as html};

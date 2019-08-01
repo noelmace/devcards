@@ -12,73 +12,103 @@ customElements.define(
 
       style.textContent = css`
         .container {
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-          padding: 1em;
-          border-radius: 10px;
+          padding: 5px;
+          perspective: 5000px;
+        }
+
+        .flashcard {
           display: grid;
-          align-items: center;
-          border: 5px solid black;
+          transition: transform .8s;
+          transform-style: preserve-3d;
+          transform-origin: center right;
         }
-        :host([flipped]) .container {
-          background-color: var(--answer-bgcolor, green);
-          color: var(--answer-color, white);
+
+        :host([flipped]) .flashcard {
+          transform: translateX(-100%) rotateY(180deg);
         }
-        :host(:not([flipped])) .container {
-          background-color: var(--question-bgcolor, red);
-          color: var(--question-color, white);
-        }
-        .question, .answer {
+
+        .card-side {
+          border-radius: 10px;
+          border: 2px solid black;
           grid-row: 1;
           grid-column: 1;
+          padding: 1em;
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        .question {
+
+        .front {
+          background-color: var(--question-bgcolor, red);
+          color: var(--question-color, white);
           text-align: center;
+          backface-visibility: hidden;
         }
+
+        .back {
+          background-color: var(--answer-bgcolor, green);
+          color: var(--answer-color, white);
+          transform: rotateY( 180deg );
+        }
+
       `;
 
       shadowRoot.appendChild(style);
 
+      const flashcard = document.createElement('div');
+      flashcard.classList.add('flashcard');
       const container = document.createElement('div');
-      container.setAttribute('class', 'container');
+      container.classList.add('container');
+      container.appendChild(flashcard);
 
-      shadowRoot.appendChild(container);
+      const front = document.createElement('div');
+      front.classList.add('card-side', 'front');
+      const back = document.createElement('div');
+      back.classList.add('card-side', 'back');
 
-      this.question = document.createElement('div');
-      this.question.setAttribute('class', 'question');
-      this.question.innerHTML = html`<slot name="question"></slot>`
+      flashcard.appendChild(front);
+      flashcard.appendChild(back);
 
-      this.answer = document.createElement('div');
-      this.answer.setAttribute('class', 'answer');
-      this.answer.innerHTML = html`<slot name="answer"></slot>`
+      const question = document.createElement('div');
+      question.setAttribute('class', 'question');
+      question.innerHTML = html`<slot name="question"></slot>`
+
+      front.appendChild(question);
+
+      const answer = document.createElement('div');
+      answer.setAttribute('class', 'answer');
+      answer.innerHTML = html`<slot name="answer"></slot>`
 
       this.addEventListener('click', e => {
         this.flip();
-        console.log('flipped');
       });
 
-      container.appendChild(this.question);
-      container.appendChild(this.answer);
-
-      this.showSide(true);
+      back.appendChild(answer);
+      shadowRoot.appendChild(container);
     }
 
+    /**
+     * reflect the 'flipped' attribute
+     * if the flipped attribute is set, the card will show its "answer" backside
+     * if not, the "question" frontside is shown
+     */
     get flipped() {
       return this.hasAttribute('flipped');
     }
 
+    /**
+     * flip the card
+     * show the answer if it's hidden, or go back to the answser
+     * @modifies {(flipped)}
+     */
     flip() {
       if (this.flipped) {
         this.removeAttribute('flipped');
-        this.showSide(true);
       } else {
         this.setAttribute('flipped', '');
-        this.showSide(false);
       }
     }
 
-    showSide(front = true) {
-      this.question.style.visibility = front ? 'visible' : 'hidden';
-      this.answer.style.visibility = front ? 'hidden' : 'visible';
-    }
   }
 );

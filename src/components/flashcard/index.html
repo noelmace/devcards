@@ -7,6 +7,10 @@
         --question-bgcolor: #F0FFFF;
         --question-color: #000;
       }
+      .important {
+        color: #FF3232;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -17,9 +21,9 @@
           What's the purpose of Web Components?
         </div>
         <ul slot="answer">
-          <li>create <strong>reusable</strong> components</li>
-          <li>w/ vanilla JS/HTML/CSS only!</li>
-          <li>without fear of code collisions</li>
+          <li>create <span class="important">reusable</span> components</li>
+          <li>w/ <span class="important">vanilla</span> JS/HTML/CSS only!</li>
+          <li>w/o fear of code <span class="important">collisions</span></li>
         </ul>
       </dc-flashcard>
     </div>

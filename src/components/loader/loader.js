@@ -1,4 +1,5 @@
 import { css } from '../../utils/tags.js';
+import { backAndForth } from '../../utils/array.js';
 
 customElements.define(
   'deck-loader',
@@ -73,13 +74,19 @@ customElements.define(
       const cardsContainer = document.createElement('div');
       cardsContainer.classList.add('cards-container');
 
+      /**
+       * @type {Array.<HTMLElement>}
+       */
       this.cards = [];
+
       for (let i = 0; i < 5; i++) {
         const card = document.createElement('div');
         card.classList.add('card');
         this.cards.push(card);
         cardsContainer.appendChild(card);
       }
+
+      this.deckGen = backAndForth(this.cards);
 
       shadowRoot.appendChild(cardsContainer);
     }
@@ -98,41 +105,66 @@ customElements.define(
     }
 
     /**
-     * run the animation
-     *
-     * @description
-     * toggle the `deployed` class on cards elements, each `this.interval` ms, back & forth on the flashcards deck
-     *
+     * stop the animation if true
+     * @default false
+     * @type {boolean}
+     */
+    get paused() {
+      return this.hasAttribute('paused');
+    }
+
+    /**
+     * @private
+     */
+    static get observedAttributes() {
+      return ['paused'];
+    }
+
+    /**
+     * pause or start the animation
+     * @private
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name === 'paused' && oldValue !== newValue) {
+        if (typeof newValue === 'string') {
+          this.stopAnimation();
+        } else if (this.deckGen) {
+          this.startAnimation();
+        }
+      }
+    }
+
+    /**
      * @private
      */
     connectedCallback() {
-      // start from the top
-      let i = 4;
-      /**
-       * @type {-1|0|1}
-       */
-      let direction = -1;
-      /**
-       * @type {-1|0|1}
-       */
-      let previousDirection = 0;
-
-      this.tInterval = setInterval(() => {
-        this.cards[i].classList.toggle('deployed');
-        i = i + direction;
-        if (i === 0 || i === 4) {
-          if (direction === -1 || direction === 1) {
-            previousDirection = direction;
-            direction = 0;
-          } else {
-            direction = -previousDirection;
-          }
-        }
-      }, this.interval);
+      this.startAnimation();
     }
 
+    /**
+     * @private
+     */
     disconnectedCallback() {
-      clearInterval(this.tInterval);
+      this.stopAnimation();
+    }
+
+    /**
+     * Start or resume the animation
+     */
+    startAnimation() {
+      if (!this.animationIntervalId) {
+        this.animationIntervalId = setInterval(
+          () => this.deckGen.next().value.classList.toggle('deployed'),
+          this.interval
+        );
+      }
+    }
+
+    stopAnimation() {
+      if (this.animationIntervalId) {
+        clearInterval(this.animationIntervalId);
+        this.animationIntervalId = null;
+      }
     }
   }
 );

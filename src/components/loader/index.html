@@ -11,10 +11,19 @@
   </head>
   <body>
     <h1>Deck Loader Demo</h1>
+    <button id="start-btn">pause</button>
     <div class="wrapper">
       <deck-loader>
       </deck-loader>
     </div>
     <script type="module" src="loader.js"></script>
+    <script>
+      const startBtn = document.getElementById('start-btn');
+      const loader = document.querySelector('deck-loader');
+      startBtn.addEventListener('click', () => {
+        const isPaused = loader.toggleAttribute('paused');
+        startBtn.innerText = isPaused ? 'start' : 'pause';
+      });
+    </script>
   </body>
 </html>

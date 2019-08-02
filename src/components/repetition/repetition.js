@@ -1,4 +1,5 @@
 import '../flashcard/flashcard.js';
+import '../loader/loader.js';
 import { css, html } from '../../utils/tags.js';
 
 /**
@@ -31,6 +32,23 @@ customElements.define(
           grid-row: 1;
           grid-column: 1;
         }
+
+        :host(:not(.loading)) deck-loader {
+          display: none;
+        }
+
+        :host(.loading) .flashcards-container, :host(.errors) .flashcards-container {
+          display: none;
+        }
+
+        .errors {
+          display: none;
+          color: red;
+        }
+
+        :host(.errors) .errors {
+          display: block;
+        }
       `;
 
       shadowRoot.appendChild(style);
@@ -38,9 +56,12 @@ customElements.define(
       this.container = document.createElement('div');
       this.container.classList.add('container');
 
-      this.flashcardsContainer = document.createElement('div');
-      this.flashcardsContainer.classList.add('flashcards-container');
-      this.container.appendChild(this.flashcardsContainer);
+      this.errors = document.createElement('div');
+      this.errors.classList.add('errors');
+      this.container.appendChild(this.errors);
+
+      this.loader = document.createElement('deck-loader');
+      this.container.appendChild(this.loader);
 
       shadowRoot.appendChild(this.container);
     }
@@ -86,16 +107,24 @@ customElements.define(
      * fetch & render the collection of flashcards
      * @private
      */
-    updateCards() {
+    async updateCards() {
       this.areCardsRendered = false;
-      this.classList.add('loading');
-      this.fetchCards(this.collection)
-        .then(cards => this.renderCards(cards))
-        .then(() => {
-          this.classList.remove('loading');
-          this.areCardsRendered = true;
-        })
-
+      const loadingTimeoutId = setTimeout(this.classList.add('loading'), 200);
+      this.loader.removeAttribute('paused');
+      this.classList.remove('errors');
+      try {
+        const cards = await this.fetchCards(this.collection);
+        this.renderCards(cards);
+      } catch(e) {
+        this.errors.innerHTML = html`
+          <p>No flashcard could be found for the ${this.collection} collection.</p>
+        `;
+        this.classList.add('errors');
+      }
+      clearTimeout(loadingTimeoutId);
+      this.classList.remove('loading');
+      this.loader.setAttribute('paused', '');
+      this.areCardsRendered = true;
     }
 
     /**
@@ -108,14 +137,13 @@ customElements.define(
       const req = new Request(`/data/${topic}.json`);
       let cards = null;
 
-      try {
-        const resp = await fetch(req);
-        const data = await resp.json();
-        if (data.length > 0) {
-          cards = data;
-        }
-      } catch (err) {
-        console.error('no cards could be found');
+      const resp = await fetch(req);
+      if (!resp.ok) {
+        throw new Error(resp.errors);
+      }
+      const data = await resp.json();
+      if (data.length > 0) {
+        cards = data;
       }
 
       return cards
@@ -125,9 +153,17 @@ customElements.define(
      * render cards objects as `<dc-flashcard>` components in the `.flashcards-container` element
      * @private
      * @param {Array.<Card>} cards the card objects to render
-     * @modifies {(this.flashcardsContainer)}
+     * @modifies {(this.container)}
      */
     renderCards(cards) {
+      const oldContainer = this.shadowRoot.querySelector('.flashcards-container');
+      if (oldContainer) {
+        oldContainer.parentNode.removeChild(oldContainer);
+      }
+
+      const flashcardsContainer = document.createElement('div');
+      flashcardsContainer.classList.add('flashcards-container');
+      this.container.appendChild(flashcardsContainer);
       cards.forEach((card, i) => {
         const flashcard = document.createElement('dc-flashcard');
         flashcard.innerHTML = `
@@ -140,9 +176,10 @@ customElements.define(
         `;
         flashcard.style.position = 'relative';
         flashcard.style.top = i * -5 + 'px';
-        this.flashcardsContainer.appendChild(flashcard);
+        flashcardsContainer.appendChild(flashcard);
       });
-      this.flashcardsContainer.style.paddingTop = cards.length * 5 + 'px';
+      flashcardsContainer.style.paddingTop = cards.length * 5 + 'px';
+      this.container.appendChild(flashcardsContainer);
     }
   }
 );

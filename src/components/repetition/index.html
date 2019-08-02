@@ -11,10 +11,23 @@
   </head>
   <body>
     <h1>Spaced Repetition Demo</h1>
+
+    <select id="collection">
+        <option value="wc-intro" selected>Introduction to Web Components</option>
+        <option value="cat">All you need to know about cats</option>
+    </select>
+
     <div class="wrapper">
       <dc-repetition collection="wc-intro">
       </dc-repetition>
     </div>
+
+    <script>
+      const selectCollection = document.getElementById('collection');
+      selectCollection.addEventListener('change', () => {
+        document.querySelector('dc-repetition').setAttribute('collection', selectCollection.value);
+      });
+    </script>
     <script type="module" src="repetition.js"></script>
   </body>
 </html>

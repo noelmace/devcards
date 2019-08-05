@@ -116,3 +116,20 @@ customElements.define(
 
   }
 );
+
+/**
+* Card object to `<dc-flashcard>` html
+* @param {Card} card
+* @param {String} style - css string to apply to the dc-flashcard
+* @returns {String} - HTML
+*/
+export const cardHtml = ({ question, answer }, style) => html`
+<dc-flashcard style="${style}">
+  <div slot="question">
+    ${question}
+  </div>
+  <div slot="answer">
+    ${answer}
+  </div>
+  </dc-flashcard>
+`;

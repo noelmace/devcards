@@ -14,10 +14,10 @@ import { css, html } from '../../utils/tags.js';
  * @returns {String} - HTML
  */
 const cardsStackHtml = cards => html`
-  <div style="padding-top: ${cards.length * 5}px; display: grid">
-    ${cards.map(
-      (card, i) => cardHtml(card, `position: relative; top: ${i * -5}px; grid-row: 1; grid-column: 1`)
-    ).join('')}
+  <div style="padding-top: ${cards.length * 5}px; display: grid" class="cards-stack">
+    ${cards
+      .map((card, i) => cardHtml(card, `position: relative; top: ${i * -5}px; grid-row: 1; grid-column: 1`))
+      .join('')}
   </div>
 `;
 
@@ -49,6 +49,15 @@ customElements.define(
           display: none;
         }
 
+        .cards-container {
+          counter-reset: card;
+        }
+
+        .cards-container > dc-flashcard {
+          counter-increment: card;
+          position: relative;
+        }
+
         .errors {
           display: none;
           color: red;
@@ -56,6 +65,14 @@ customElements.define(
 
         :host(.errors) .errors {
           display: block;
+        }
+
+        :host(.empty) .action, :host(.errors) .action, :host(.loading) .action   {
+          visibility: hidden;
+        }
+
+        .empty-box {
+          text-align: center;
         }
       `;
 
@@ -66,12 +83,62 @@ customElements.define(
 
       const iconsSize = '50px';
       container.innerHTML = html`
+        <div class="action action-ok">
+          <img src="./thumb-up.svg" height="${iconsSize}" width="${iconsSize}" />
+        </div>
         <div class="flashcards-container"></div>
+        <div class="action action-nok">
+          <img src="./thumb-down.svg" height="${iconsSize}" width="${iconsSize}" />
+        </div>
         <div class="errors"></div>
         <deck-loader></deck-loader>
       `;
 
       shadowRoot.appendChild(container);
+
+      const removeCard = () => {
+        const stack = shadowRoot.querySelector('.cards-stack');
+        stack.removeChild(stack.lastElementChild);
+        if (stack.querySelector('dc-flashcard') === null) {
+          const emptyBox = document.createElement('div');
+          emptyBox.classList.add('empty-box');
+          const msg = document.createElement('p');
+          if (this.boxes[0].length > 0) {
+            this.classList.add('refillable');
+            msg.innerText = 'You finished this session, but you still have some cards to review in this box.';
+            const reload = document.createElement('img')
+            reload.setAttribute('src', './reload.svg');
+            reload.setAttribute('alt', 'reload');
+            reload.classList.add('btn-reload');
+            reload.addEventListener('click', () => {
+              this.renderCards(this.boxes[0]);
+            });
+            emptyBox.appendChild(reload);
+          } else {
+            msg.innerText = 'This box is now empty!';
+          }
+          emptyBox.prepend(msg);
+          stack.appendChild(emptyBox);
+          this.classList.add('empty');
+        }
+      };
+
+      /**
+       * Leitner System boxes
+       * See https://en.wikipedia.org/wiki/Leitner_system
+       */
+      this.boxes = [[], [], []];
+
+      shadowRoot.querySelector('.action-ok').addEventListener('click', () => {
+        this.boxes[1].push(this.boxes[0].pop());
+        removeCard();
+      });
+
+      shadowRoot.querySelector('.action-nok').addEventListener('click', () => {
+        this.boxes[0].unshift(this.boxes[0].pop());
+        removeCard();
+      });
+
     }
 
     /**
@@ -162,8 +229,8 @@ customElements.define(
     async updateCards() {
       this.isLoading();
       try {
-        const cards = await this.fetchCards(this.collection);
-        this.renderCards(cards);
+        this.boxes[0] = await this.fetchCards(this.collection);
+        this.renderCards(this.boxes[0]);
       } catch (e) {
         this.showErrors(html`
           <p>No flashcard could be found for the ${this.collection} collection.</p>
@@ -201,6 +268,8 @@ customElements.define(
      * @modifies {(this.container)}
      */
     renderCards(cards) {
+      this.classList.remove('empty', 'refillable');
+      // TODO: use the existing dc-flashcard WC for better performance
       this.shadowRoot.querySelector('.flashcards-container').innerHTML = cardsStackHtml(cards);
     }
   }

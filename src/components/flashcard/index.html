@@ -4,27 +4,37 @@
   <head>
     <style>
       dc-flashcard {
-        --question-bgcolor: #F0FFFF;
+        --question-bgcolor: #f0ffff;
         --question-color: #000;
+        --card-width: 300px;
       }
       .important {
-        color: #FF3232;
+        color: #ff3232;
         font-weight: bold;
       }
     </style>
+    <link rel="stylesheet" href="/assets/style/normalize.css" />
   </head>
   <body>
     <h1>Flashcard Demo</h1>
     <div style="width: 300px">
       <dc-flashcard>
         <div slot="question">
-          What's the purpose of Web Components?
+            What are the usual steps required to define a Web Component?
         </div>
-        <ul slot="answer">
-          <li>create <span class="important">reusable</span> components</li>
-          <li>w/ <span class="important">vanilla</span> JS/HTML/CSS only!</li>
-          <li>w/o fear of code <span class="important">collisions</span></li>
-        </ul>
+          <ol slot="answer">
+            <li>
+              <strong>Create a class or a function</strong> in which you specify your web component
+              <strong>functionality</strong>
+            </li>
+            <li><strong>register</strong> your custom element</li>
+            <li><em>(optional)</em> <strong>attach a shadow DOM</strong> to the custom element</li>
+            <li>
+              <em>(optional)</em> <strong>define an HTML template</strong> using <code>&lt;template&gt;</code> and
+              <code>&lt;slot&gt;</code>, <strong>clone</strong> the template and <strong>attach it</strong> toyour
+              shadow DOM.
+            </li>
+          </ol>
       </dc-flashcard>
     </div>
     <script type="module" src="flashcard.js"></script>

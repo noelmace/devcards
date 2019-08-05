@@ -12,17 +12,14 @@ customElements.define(
 
       style.textContent = css`
         .container {
-          padding: 5px;
+          width: var(--card-width, 200px);
           perspective: 5000px;
-          height: calc(100% - 10px);
-          width: calc(100% - 10px);
+          margin: 0 auto;
         }
 
         .flashcard {
           display: grid;
-          height: 100%;
-          width: 100%;
-          transition: transform .8s;
+          transition: transform 0.8s;
           transform-style: preserve-3d;
           transform-origin: center right;
         }
@@ -36,26 +33,54 @@ customElements.define(
           border: 2px solid black;
           grid-row: 1;
           grid-column: 1;
-          padding: 1em;
+          padding: .5em;
           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
+          height: calc(var(--card-width, 200px) * 1.39);
+          overflow: auto;
+          backface-visibility: hidden;
+        }
+
+        .card-side > * {
+          flex: 1 1;
+          margin: auto;
+        }
+
+        .card-side ul, .card-side ol {
+          margin: 0;
         }
 
         .front {
           background-color: var(--question-bgcolor, red);
           color: var(--question-color, white);
           text-align: center;
-          backface-visibility: hidden;
         }
 
         .back {
           background-color: var(--answer-bgcolor, green);
           color: var(--answer-color, white);
-          transform: rotateY( 180deg );
+          transform: rotateY(180deg);
         }
 
+        /* TODO: firefox */
+
+        .card-side::-webkit-scrollbar {
+          width: 10px;
+        }
+        .card-side::-webkit-scrollbar-track {
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	        border-radius: 10px;
+        }
+        .card-side::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+          background-color: rgba(0, 0, 0, .3);
+        }
+        .card-side::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
       `;
 
       shadowRoot.appendChild(style);
@@ -76,13 +101,17 @@ customElements.define(
 
       const question = document.createElement('div');
       question.setAttribute('class', 'question');
-      question.innerHTML = html`<slot name="question"></slot>`
+      question.innerHTML = html`
+        <slot name="question"></slot>
+      `;
 
       front.appendChild(question);
 
       const answer = document.createElement('div');
       answer.setAttribute('class', 'answer');
-      answer.innerHTML = html`<slot name="answer"></slot>`
+      answer.innerHTML = html`
+        <slot name="answer"></slot>
+      `;
 
       this.addEventListener('click', e => {
         this.flip();
@@ -113,23 +142,22 @@ customElements.define(
         this.setAttribute('flipped', '');
       }
     }
-
   }
 );
 
 /**
-* Card object to `<dc-flashcard>` html
-* @param {Card} card
-* @param {String} style - css string to apply to the dc-flashcard
-* @returns {String} - HTML
-*/
-export const cardHtml = ({ question, answer }, style) => html`
-<dc-flashcard style="${style}">
-  <div slot="question">
-    ${question}
-  </div>
-  <div slot="answer">
-    ${answer}
-  </div>
+ * Card object to `<dc-flashcard>` html
+ * @param {Card} card
+ * @param {String} style - css string to apply to the dc-flashcard
+ * @returns {String} - HTML
+ */
+export const cardHtml = ({ question, answer }, style = '') => html`
+  <dc-flashcard style="${style}">
+    <div slot="question">
+      ${question}
+    </div>
+    <div slot="answer">
+      ${answer}
+    </div>
   </dc-flashcard>
 `;

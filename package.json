@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-docs": "jsdoc -c .jsdoc.conf.json",
+    "build-icons": "icon-font-generator assets/icons/*.svg -o public/icons",
     "start": "browser-sync start --server --files 'src' 'index.html' 'data'"
   },
   "author": {
@@ -16,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.26.7",
+    "icon-font-generator": "^2.1.10",
     "prettier": "1.18.2"
   }
 }

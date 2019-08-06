@@ -62,3 +62,8 @@ typings/
 
 # jsdoc docs
 docs/
+
+# icons gen
+public/icons/*
+!public/icons/.gitkeep
+

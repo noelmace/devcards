@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <style>
+      .wrapper {
+        width: 600px;
+        margin: 0 auto;
+      }
+
+      dc-stack {
+        --card-width: 300px;
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/style/normalize.css" />
+  </head>
+  <body>
+    <h1>Spaced Repetition Demo</h1>
+
+    <select id="collection">
+        <option>-- select a collection --</option>
+        <option value="wc-intro">Introduction to Web Components</option>
+        <option value="cat">All you need to know about cats</option>
+    </select>
+
+    <button id="pop">pop</button>
+    <button id="move-back">move back</button>
+
+    <div class="wrapper">
+      <dc-stack></dc-stack>
+    </div>
+
+    <script>
+      const selectCollection = document.getElementById('collection');
+      const wc = document.querySelector('dc-stack');
+      selectCollection.addEventListener('change', async () => {
+        const resp = await fetch(new Request(`/data/${selectCollection.value}.json`));
+        wc.collection = await resp.json();
+      });
+      document.getElementById('pop').addEventListener('click', () => {
+        wc.pop();
+      });
+      document.getElementById('move-back').addEventListener('click', () => {
+        wc.moveBack();
+      });
+    </script>
+    <script type="module" src="card-stack.js"></script>
+  </body>
+</html>

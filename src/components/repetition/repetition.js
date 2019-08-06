@@ -1,19 +1,6 @@
-import { cardHtml } from '../flashcard/flashcard.js';
+import '../card-stack/card-stack.js'
 import '../loader/loader.js';
 import { css, html } from '../../utils/tags.js';
-
-/**
- * Card array to a "stacked deck" HTML
- * @param {Array.<Card>} cards
- * @returns {String} - HTML
- */
-const cardsStackHtml = cards => html`
-  <div style="padding-top: ${cards.length * 5}px; display: grid" class="cards-stack">
-    ${cards
-      .map((card, i) => cardHtml(card, `position: relative; top: ${i * -5}px; grid-row: 1; grid-column: 1`))
-      .join('')}
-  </div>
-`;
 
 customElements.define(
   'dc-repetition',
@@ -75,10 +62,6 @@ customElements.define(
           display: none;
         }
 
-        .empty-box {
-          text-align: center;
-        }
-
         i {
           background-size: contain;
           height: var(--icons-size, 50px);
@@ -104,7 +87,9 @@ customElements.define(
         <div class="action-wrapper">
           <i class="thumb-up action action-ok"></i>
         </div>
-        <div class="flashcards-container"></div>
+        <div class="flashcards-container">
+          <dc-stack class="stack-0"></dc-stack>
+        </div>
         <div class="action-wrapper">
           <i class="thumb-down action action-nok"></i>
         </div>
@@ -114,33 +99,6 @@ customElements.define(
 
       shadowRoot.appendChild(container);
 
-      const removeCard = () => {
-        const stack = shadowRoot.querySelector('.cards-stack');
-        stack.removeChild(stack.lastElementChild);
-        if (stack.querySelector('dc-flashcard') === null) {
-          const emptyBox = document.createElement('div');
-          emptyBox.classList.add('empty-box');
-          const msg = document.createElement('p');
-          if (this.boxes[0].length > 0) {
-            this.classList.add('refillable');
-            msg.innerText = 'You finished this session, but you still have some cards to review in this box.';
-            const reload = document.createElement('img')
-            reload.setAttribute('src', new URL('./reload.svg', import.meta.url).toString());
-            reload.setAttribute('alt', 'reload');
-            reload.classList.add('btn-reload');
-            reload.addEventListener('click', () => {
-              this.renderCards(this.boxes[0]);
-            });
-            emptyBox.appendChild(reload);
-          } else {
-            msg.innerText = 'This box is now empty!';
-          }
-          emptyBox.prepend(msg);
-          stack.appendChild(emptyBox);
-          this.classList.add('empty');
-        }
-      };
-
       /**
        * Leitner System boxes
        * @private
@@ -149,13 +107,20 @@ customElements.define(
       this.boxes = [[], [], []];
 
       shadowRoot.querySelector('.action-ok').addEventListener('click', () => {
-        this.boxes[1].push(this.boxes[0].pop());
-        removeCard();
+        const poped = shadowRoot.querySelector('.stack-0').pop();
+        this.boxes[1] = [...this.boxes, poped.card];
       });
 
       shadowRoot.querySelector('.action-nok').addEventListener('click', () => {
-        this.boxes[0].unshift(this.boxes[0].pop());
-        removeCard();
+        shadowRoot.querySelector('.stack-0').moveBack();
+      });
+
+      shadowRoot.querySelector('.stack-0').addEventListener('empty-stack', () => {
+        this.classList.add('empty');
+      });
+
+      shadowRoot.querySelector('.stack-0').addEventListener('reload-collection', () => {
+        this.classList.remove('empty');
       });
 
     }
@@ -230,6 +195,7 @@ customElements.define(
         clearTimeout(this.loadingTimeoutId);
         loader.setAttribute('paused', '');
         this.classList.remove('loading');
+        this.classList.remove('empty');
       }
     }
 
@@ -249,13 +215,14 @@ customElements.define(
       this.isLoading();
       try {
         this.boxes[0] = await this.fetchCards(this.collection);
-        this.renderCards(this.boxes[0]);
       } catch (e) {
         this.showErrors(html`
           <p>No flashcard could be found for the ${this.collection} collection.</p>
         `);
       }
+      this.renderCards(this.boxes[0]);
       this.isLoading(false);
+
     }
 
     /**
@@ -286,9 +253,7 @@ customElements.define(
      * @param {Array.<Card>} cards the card objects to render
      */
     renderCards(cards) {
-      this.classList.remove('empty', 'refillable');
-      // TODO: use the existing dc-flashcard WC for better performance
-      this.shadowRoot.querySelector('.flashcards-container').innerHTML = cardsStackHtml(cards);
+      this.shadowRoot.querySelector('.stack-0').collection = cards;
     }
   }
 );

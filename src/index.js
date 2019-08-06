@@ -1,1 +1,1 @@
-import './components/flashcard/flashcard.js';
+import './components/repetition/repetition.js';

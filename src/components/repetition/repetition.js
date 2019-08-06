@@ -3,12 +3,6 @@ import '../loader/loader.js';
 import { css, html } from '../../utils/tags.js';
 
 /**
- * @typedef {Object} Card
- * @property {String} question - sanitized HTML for the front of a flashcard
- * @property {String} answer - sanitized HTML for the back of a flashcard
- */
-
-/**
  * Card array to a "stacked deck" HTML
  * @param {Array.<Card>} cards
  * @returns {String} - HTML
@@ -125,7 +119,8 @@ customElements.define(
 
       /**
        * Leitner System boxes
-       * See https://en.wikipedia.org/wiki/Leitner_system
+       * @private
+       * @see {@link https://en.wikipedia.org/wiki/Leitner_system}
        */
       this.boxes = [[], [], []];
 
@@ -265,7 +260,6 @@ customElements.define(
      * render cards objects as `<dc-flashcard>` components in the `.flashcards-container` element
      * @private
      * @param {Array.<Card>} cards the card objects to render
-     * @modifies {(this.container)}
      */
     renderCards(cards) {
       this.classList.remove('empty', 'refillable');

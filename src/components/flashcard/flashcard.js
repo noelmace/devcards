@@ -1,5 +1,11 @@
 import { css, html } from '../../utils/tags.js';
 
+/**
+ * @typedef {Object} Card
+ * @property {String} question - sanitized HTML for the front of a flashcard
+ * @property {String} answer - sanitized HTML for the back of a flashcard
+ */
+
 customElements.define(
   'dc-flashcard',
   class extends HTMLElement {

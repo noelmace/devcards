@@ -30,8 +30,18 @@ customElements.define(
           align-items: center;
         }
 
-        .flashcards-container {
-          flex-grow: 1;
+        .container > * {
+          flex: 1 1;
+        }
+
+        .container > :nth-child(1) {
+          text-align: right;
+          padding-right: 1em;
+        }
+
+        .container > :nth-child(3) {
+          text-align: left;
+          padding-left: 1em;
         }
 
         :host(:not(.loading)) deck-loader {
@@ -61,12 +71,27 @@ customElements.define(
           display: block;
         }
 
-        :host(.empty) .action, :host(.errors) .action, :host(.loading) .action   {
-          visibility: hidden;
+        :host(.empty) .action-wrapper, :host(.errors) .action-wrapper, :host(.loading) .action-wrapper   {
+          display: none;
         }
 
         .empty-box {
           text-align: center;
+        }
+
+        i {
+          background-size: contain;
+          height: var(--icons-size, 50px);
+          width: var(--icons-size, 50px);
+          display: inline-block;
+        }
+
+        i.thumb-up {
+          background-image: url("${ new URL('./thumb-up.svg', import.meta.url).toString() }");
+        }
+
+        i.thumb-down {
+          background-image: url("${ new URL('./thumb-down.svg', import.meta.url).toString() }");
         }
       `;
 
@@ -75,14 +100,13 @@ customElements.define(
       const container = document.createElement('div');
       container.classList.add('container');
 
-      const iconsSize = '50px';
       container.innerHTML = html`
-        <div class="action action-ok">
-          <img src="./thumb-up.svg" height="${iconsSize}" width="${iconsSize}" />
+        <div class="action-wrapper">
+          <i class="thumb-up action action-ok"></i>
         </div>
         <div class="flashcards-container"></div>
-        <div class="action action-nok">
-          <img src="./thumb-down.svg" height="${iconsSize}" width="${iconsSize}" />
+        <div class="action-wrapper">
+          <i class="thumb-down action action-nok"></i>
         </div>
         <div class="errors"></div>
         <deck-loader></deck-loader>
@@ -101,7 +125,7 @@ customElements.define(
             this.classList.add('refillable');
             msg.innerText = 'You finished this session, but you still have some cards to review in this box.';
             const reload = document.createElement('img')
-            reload.setAttribute('src', './reload.svg');
+            reload.setAttribute('src', new URL('./reload.svg', import.meta.url).toString());
             reload.setAttribute('alt', 'reload');
             reload.classList.add('btn-reload');
             reload.addEventListener('click', () => {

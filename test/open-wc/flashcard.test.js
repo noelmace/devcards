@@ -25,11 +25,11 @@ describe('no content provided', () => {
     const questionContent = el.shadowRoot.querySelectorAll('slot[name=question] > *');
 
     // Then: no new question slot in light DOM
-    expect(el).lightDom.to.equal('')
+    expect(el).lightDom.to.be.empty
     //    And: default question is an error
     expect(questionContent[0]).to.have.class('error')
     //    And: there isn't anything else in the question slot
-    expect(questionContent.length).to.equal(1);
+    expect(questionContent).to.have.length(1);
   });
 
   it('show an error message in "answer"', async () => {
@@ -37,11 +37,11 @@ describe('no content provided', () => {
     const answerContent = el.shadowRoot.querySelectorAll('slot[name=answer] > *');
 
     // Then: no new question slot in light DOM
-    expect(el).lightDom.to.equal('')
+    expect(el).lightDom.to.be.empty
     //    And: default question is an error
     expect(answerContent[0]).to.have.class('error')
     //    And: there isn't anything else in the question slot
-    expect(answerContent.length).to.equal(1);
+    expect(answerContent).to.have.length(1);
   });
 });
 

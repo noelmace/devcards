@@ -4,9 +4,15 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma start --coverage",
     "build-docs": "jsdoc -c .jsdoc.conf.json",
-    "start": "browser-sync start --server --files 'src' 'index.html' 'data'"
+    "start": "browser-sync start --server --files 'src' 'index.html' 'data'",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:update-snapshots": "karma start --update-snapshots",
+    "test:prune-snapshots": "karma start --prune-snapshots",
+    "test:compatibility": "karma start --compatibility all --coverage",
+    "test:compatibility:watch": "karma start --compatibility all --auto-watch=true --single-run=false",
+    "test:bs": "karma start karma.bs.config.js --compatibility all --coverage"
   },
   "author": {
     "name": "Noël Macé",
@@ -15,7 +21,13 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/testing-karma": "^3.0.0",
+    "@open-wc/testing-karma-bs": "^1.0.0",
     "browser-sync": "^2.26.7",
-    "prettier": "1.18.2"
+    "chai-dom": "^1.8.1",
+    "lit-html": "^1.1.1",
+    "prettier": "1.18.2",
+    "webpack-merge": "^4.1.5"
   }
 }

@@ -4,15 +4,16 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "karma start --coverage",
+    "test": "npm run owc:test",
     "build-docs": "jsdoc -c .jsdoc.conf.json",
     "start": "browser-sync start --server --files 'src' 'index.html' 'data'",
-    "test:watch": "karma start --auto-watch=true --single-run=false",
-    "test:update-snapshots": "karma start --update-snapshots",
-    "test:prune-snapshots": "karma start --prune-snapshots",
-    "test:compatibility": "karma start --compatibility all --coverage",
-    "test:compatibility:watch": "karma start --compatibility all --auto-watch=true --single-run=false",
-    "test:bs": "karma start karma.bs.config.js --compatibility all --coverage"
+    "owc:test": "karma start karma.owc.conf.js --coverage",
+    "owc:test:watch": "karma start karma.owc.conf.js --auto-watch=true --single-run=false",
+    "owc:test:update-snapshots": "karma start karma.owc.conf.js --update-snapshots",
+    "owc:test:prune-snapshots": "karma start karma.owc.conf.js --prune-snapshots",
+    "owc:test:compatibility": "karma start karma.owc.conf.js --compatibility all --coverage",
+    "owc:test:compatibility:watch": "karma start karma.owc.conf.js --compatibility all --auto-watch=true --single-run=false",
+    "owc:test:bs": "karma start karma.owc.bs.config.js --compatibility all --coverage"
   },
   "author": {
     "name": "Noël Macé",

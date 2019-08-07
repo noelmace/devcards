@@ -5,11 +5,11 @@ import {
   chai
 } from '@open-wc/testing';
 
-import { chaiDom } from '../../../test/chai-dom/chai-dom.js';
+import { chaiDom } from '../chai-dom/chai-dom.js';
 
 chai.use(chaiDom);
 
-import './flashcard.js';
+import '../../src/components/flashcard/flashcard.js';
 
 describe('no content provided', () => {
 

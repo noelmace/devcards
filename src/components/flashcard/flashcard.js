@@ -70,6 +70,11 @@ customElements.define(
           transform: rotateY(180deg);
         }
 
+        .error {
+          font-weight: bold;
+          color: red;
+        }
+
         /* TODO: firefox */
 
         .card-side::-webkit-scrollbar {
@@ -108,7 +113,9 @@ customElements.define(
       const question = document.createElement('div');
       question.setAttribute('class', 'question');
       question.innerHTML = html`
-        <slot name="question"></slot>
+        <slot name="question">
+          <p class="error">Error: No question was provided</p>
+        </slot>
       `;
 
       front.appendChild(question);
@@ -116,7 +123,9 @@ customElements.define(
       const answer = document.createElement('div');
       answer.setAttribute('class', 'answer');
       answer.innerHTML = html`
-        <slot name="answer"></slot>
+        <slot name="answer">
+          <p class="error">Error: No answer was provided</p>
+        </slot>
       `;
 
       this.addEventListener('click', e => {

@@ -4,9 +4,10 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "npm run owc:test",
+    "test": "npm run owc:test; npm run vanilla-test",
     "build-docs": "jsdoc -c .jsdoc.conf.json",
     "start": "browser-sync start --server --files 'src' 'index.html' 'data'",
+    "vanilla-test": "karma start karma.owc.conf.js --coverage --grep 'test/vanilla-chai/**/*.test.js'",
     "owc:test": "karma start karma.owc.conf.js --coverage",
     "owc:test:watch": "karma start karma.owc.conf.js --auto-watch=true --single-run=false",
     "owc:test:update-snapshots": "karma start karma.owc.conf.js --update-snapshots",
@@ -22,6 +23,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@bundled-es-modules/chai": "^4.2.1",
     "@open-wc/testing": "^0.11.1",
     "@open-wc/testing-karma": "^3.0.0",
     "@open-wc/testing-karma-bs": "^1.0.0",

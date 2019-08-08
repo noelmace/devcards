@@ -1,6 +1,22 @@
 # Testing
 
+## Trends (August '19)
+
+[Google Trends](https://trends.google.fr/trends/explore?date=2013-07-08%202019-08-08&q=chaijs,jasminejs,mochajs,jestjs)
+
+| Tool    | :octocat: :star: | npm weekly downloads | last release     | contribs (May-July '19)        |
+|---------|---------------------|----------------------|------------------|--------------------------------|
+| Jasmine | ~ 15 000            | ~1,2 million         | 3.4.0, April '19 | 53 commits by 7 contributors   |
+| Chai    | ~  6 500            | ~2,5 million         | 4.2.0, Sept. '18 | 3 commits by 2 contributors    |
+| Mocha   | ~ 18 000            | ~2,8 millions        | 6.2.0, July  '19 | 24 commits by 10 contributors  |
+| Jest    | ~ 26 893            | ~4,3 millions        | 24.8.0, May  '19 | 44 commits by 10 contributors  |
+| web-component-tester | (monorepo) 310 | ~15 000      | 6.9.2, Dec.  '18 | 8 commits by 2 contributors    |
+| @open-wc/testing | (monorepo) 433 | ~1 500           | 2.2.8, Aug.  '19 | 9 commits by 5 contributors    |
+| Showroom | 82                 | 15                   | 0.9.3, Dec.  '18 | 3 commits by 1 contributor     |
+
 ## @open-wc/testing
+
+Karma + Mocha + Chai + Sinon + helpers
 
 See [open-wc.org/testing](https://open-wc.org/testing).
 
@@ -8,6 +24,11 @@ See [open-wc.org/testing](https://open-wc.org/testing).
 
 Karma + Mocha + Chai without any helpers. Inspired by open-wc, off course.
 Only @open-wc/testing for Karma configuration, as there isn't anything special to say about this part.
+
+## Karma/Jasmine
+
+Well, I love jasmine, even if it's not the trendiest solution right now.
+Just for comparison with the other ones.
 
 ## Showroom
 

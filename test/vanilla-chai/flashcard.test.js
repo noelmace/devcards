@@ -6,8 +6,7 @@ describe('no content provided', () => {
 
   let el;
 
-  beforeEach(async () => {
-    // Given: no initial slot / light DOM
+  beforeEach('Given: no initial slot / light DOM', async () => {
     el = document.createElement('dc-flashcard');
     document.body.appendChild(el);
     return new Promise(resolve => requestAnimationFrame(() => resolve()));

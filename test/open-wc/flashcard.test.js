@@ -15,7 +15,7 @@ describe('no content provided', () => {
 
   let el;
 
-  beforeEach(async () => {
+  beforeEach('Given: no initial slot / light DOM', async () => {
     // Given: no initial slot / light DOM
     el = await fixture('<dc-flashcard></dc-flashcard>');
   })

@@ -1,0 +1,42 @@
+{
+  // project settings for mono-repositories isn't implemented in VS Code for now so you'll need to open this submodule
+  // itself instead of the web-on-fire monorepo in order to launch jest from VS Code for debugging
+  // see https://github.com/Microsoft/vscode/issues/32693
+  //
+  // see https://github.com/microsoft/vscode-recipes/tree/master/debugging-jest-tests
+  // and https://jestjs.io/docs/en/troubleshooting#debugging-in-vs-code
+  // for more information about this config
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest All",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Current File",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        "${fileBasenameNoExtension}",
+        "--config",
+        "jest.config.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      }
+    }
+  ]
+}

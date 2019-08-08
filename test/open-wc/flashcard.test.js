@@ -1,9 +1,4 @@
-import {
-  html,
-  fixture,
-  expect,
-  chai
-} from '@open-wc/testing';
+import { html, fixture, expect, chai } from '@open-wc/testing';
 
 import { chaiDom } from '../utils/chai-dom/chai-dom.js';
 
@@ -12,22 +7,21 @@ chai.use(chaiDom);
 import '../../src/components/flashcard/flashcard.js';
 
 describe('no content provided', () => {
-
   let el;
 
   beforeEach('Given: no initial slot / light DOM', async () => {
     // Given: no initial slot / light DOM
     el = await fixture('<dc-flashcard></dc-flashcard>');
-  })
+  });
 
   it('show an error message in "question"', async () => {
     // question slot fallback content
     const questionContent = el.shadowRoot.querySelectorAll('slot[name=question] > *');
 
     // Then: no new question slot in light DOM
-    expect(el).lightDom.to.be.empty
+    expect(el).lightDom.to.be.empty;
     //    And: default question is an error
-    expect(questionContent[0]).to.have.class('error')
+    expect(questionContent[0]).to.have.class('error');
     //    And: there isn't anything else in the question slot
     expect(questionContent).to.have.length(1);
   });
@@ -36,12 +30,11 @@ describe('no content provided', () => {
     // answer slot fallback content
     const answerContent = el.shadowRoot.querySelectorAll('slot[name=answer] > *');
 
-    // Then: no new question slot in light DOM
-    expect(el).lightDom.to.be.empty
-    //    And: default question is an error
-    expect(answerContent[0]).to.have.class('error')
-    //    And: there isn't anything else in the question slot
+    // Then: no new answer slot in light DOM
+    expect(el).lightDom.to.be.empty;
+    //    And: default answer is an error
+    expect(answerContent[0]).to.have.class('error');
+    //    And: there isn't anything else in the answer slot
     expect(answerContent).to.have.length(1);
   });
 });
-

@@ -1,15 +1,17 @@
 import { chai, expect } from '@bundled-es-modules/chai';
 
 import '../../src/components/flashcard/flashcard.js';
+import { nextFrame, waitForComponent } from '../utils/rendering.js';
 
 describe('no content provided', () => {
 
   let el;
 
   beforeEach('Given: no initial slot / light DOM', async () => {
-    el = document.createElement('dc-flashcard');
+    const tagName = 'dc-flashcard';
+    el = document.createElement(tagName);
     document.body.appendChild(el);
-    return new Promise(resolve => requestAnimationFrame(() => resolve()));
+    return waitForComponent(tagName)
   })
 
   it('show an error message in "question"', async () => {

@@ -5,7 +5,7 @@ import {
   chai
 } from '@open-wc/testing';
 
-import { chaiDom } from '../chai-dom/chai-dom.js';
+import { chaiDom } from '../utils/chai-dom/chai-dom.js';
 
 chai.use(chaiDom);
 

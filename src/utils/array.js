@@ -1,3 +1,5 @@
+/** @module */
+
 /**
  * Permits to infinitely iterate over an Array, back and forth, starting from its last element
  * @type {Generator}

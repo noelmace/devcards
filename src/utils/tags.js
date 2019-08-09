@@ -1,3 +1,5 @@
+/** @module */
+
 /**
  * Identity template tag
  * permits dev tools (like Prettier) to identify template strings as css
@@ -15,7 +17,7 @@ export function css(strings, ...keys) {
   }
   if (strings.length > keys.length) {
     return acc + strings[strings.length - 1];
-  } else if (keys.length < strings.length) {
+  } else if (keys.length > strings.length) {
     return acc + keys[keys.length - 1];
   }
   return acc;
@@ -30,4 +32,4 @@ export function css(strings, ...keys) {
  *    <div>Hello World!</div>
  *  `
  */
-export {css as html};
+export { css as html };

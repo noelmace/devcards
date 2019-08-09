@@ -40,7 +40,7 @@ class CardStackComponent extends HTMLElement {
       }
 
       i.reload {
-        background-image: url("${ new URL('./reload.svg', import.meta.url).toString() }");
+        background-image: url("${new URL('./reload.svg', import.meta.url).toString()}");
       }
     `;
 
@@ -60,15 +60,15 @@ class CardStackComponent extends HTMLElement {
     /**
      * @private
      */
-    this._collection = []
+    this._collection = [];
 
-    this.emptyStackEvent = new CustomEvent("empty-stack", {
+    this.emptyStackEvent = new CustomEvent('empty-stack', {
       bubbles: false,
       cancelable: false,
       composed: true
     });
 
-    this.reloadFromCollectionEvent = new CustomEvent("reload-collection", {
+    this.reloadFromCollectionEvent = new CustomEvent('reload-collection', {
       bubbles: false,
       cancelable: false,
       composed: true
@@ -166,7 +166,4 @@ class CardStackComponent extends HTMLElement {
   }
 }
 
-customElements.define(
-  'dc-stack',
-  CardStackComponent
-);
+customElements.define('dc-stack', CardStackComponent);

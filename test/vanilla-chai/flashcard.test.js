@@ -22,7 +22,7 @@ describe('no content provided', () => {
     //    And: default question is an error
     expect([...questionContent[0].classList]).to.contains('error');
     //    And: there isn't anything else in the question slot
-    expect(questionContent).to.have.length(1);
+    expect(questionContent).to.have.lengthOf(1);
   });
 
   it('show an error message in "answer"', async () => {
@@ -34,7 +34,7 @@ describe('no content provided', () => {
     //    And: default answer is an error
     expect([...answerContent[0].classList]).to.contain('error');
     //    And: there isn't anything else in the answer slot
-    expect(answerContent).to.have.length(1);
+    expect(answerContent).to.have.lengthOf(1);
   });
 
   afterEach(() => {

@@ -18,9 +18,10 @@
     <h1>Spaced Repetition Demo</h1>
 
     <select id="collection">
-        <option>-- select a collection --</option>
-        <option value="wc-intro">Introduction to Web Components</option>
-        <option value="cat">All you need to know about cats</option>
+      <option>-- select a collection --</option>
+      <option value="wc-intro">Introduction to Web Components</option>
+      <option value="cat">All you need to know about cats</option>
+      <option value="mock">A mock</option>
     </select>
 
     <button id="pop">pop</button>
@@ -31,11 +32,30 @@
     </div>
 
     <script>
+      const collectionMock = [
+        {
+          question: 'fooo',
+          answer: '<ul><li>bar</li><li>baz</li></ul>'
+        },
+        {
+          question: '<p>foo p</p>',
+          answer: '<div>bar</div>'
+        },
+        {
+          question: 'Foo',
+          answer: '<div>bar</div>'
+        }
+      ];
+
       const selectCollection = document.getElementById('collection');
       const wc = document.querySelector('dc-stack');
       selectCollection.addEventListener('change', async () => {
-        const resp = await fetch(new Request(`/data/${selectCollection.value}.json`));
-        wc.collection = await resp.json();
+        if (selectCollection.value !== 'mock') {
+          const resp = await fetch(new Request(`/data/${selectCollection.value}.json`));
+          wc.collection = await resp.json();
+        } else {
+          wc.collection = collectionMock;
+        }
       });
       document.getElementById('pop').addEventListener('click', () => {
         wc.pop();

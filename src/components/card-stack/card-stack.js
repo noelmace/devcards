@@ -55,12 +55,12 @@ class CardStackComponent extends HTMLElement {
      * @private
      * @type {Array.<Card>}
      */
-    this.currentDeck = [];
+    this.currentDeck = null;
 
     /**
      * @private
      */
-    this._collection = [];
+    this._collection = null;
 
     this.emptyStackEvent = new CustomEvent('empty-stack', {
       bubbles: false,
@@ -73,6 +73,8 @@ class CardStackComponent extends HTMLElement {
       cancelable: false,
       composed: true
     });
+
+    this.renderNoCollection();
   }
 
   /**
@@ -117,11 +119,14 @@ class CardStackComponent extends HTMLElement {
     `;
     emptyBox.querySelector('.reload').addEventListener('click', () => {
       this.render(this._collection);
-      this.currentDeck = this._collection;
       this.dispatchEvent(this.reloadFromCollectionEvent);
     });
     this.container.appendChild(emptyBox);
     this.classList.add('empty');
+  }
+
+  renderNoCollection() {
+    this.container.innerHTML = `<p>No valid collection</p>`;
   }
 
   /**
@@ -144,25 +149,31 @@ class CardStackComponent extends HTMLElement {
   propertyChangedCallback(prop, oldValue, newValue) {
     // cards collections are considered immutable
     if (prop === 'collection' && oldValue !== newValue) {
-      this.render(newValue);
-      this._collection = newValue;
-      this.currentDeck = this._collection;
+      if(Array.isArray(newValue) && newValue.length > 0) {
+        this.render(newValue);
+        this._collection = newValue;
+      } else {
+        this.renderNoCollection();
+        this._collection = null;
+        this.currentDeck = null;
+      }
     }
   }
 
   render(cards) {
-    if (cards.length !== this.currentDeck.length) {
+    if (!this.currentDeck || cards.length !== this.currentDeck.length) {
       this.container.style.paddingTop = `${cards.length * 5}px`;
     }
     this.container.innerHTML = cards
       .map(
-        card => html`
+        card => `
           <div class="card-wrapper">
             ${cardHtml(card)}
           </div>
         `
       )
       .join('');
+    this.currentDeck = cards;
   }
 }
 

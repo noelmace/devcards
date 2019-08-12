@@ -32,12 +32,12 @@ class RepetitionComponent extends HTMLElement {
         padding-left: 1em;
       }
 
-      :host(:not(.loading)) deck-loader {
+      .container:not(.loading) deck-loader {
         display: none;
       }
 
-      :host(.loading) .flashcards-container,
-      :host(.errors) .flashcards-container {
+      .container.loading .flashcards-container,
+      .container.errors .flashcards-container {
         display: none;
       }
 
@@ -50,16 +50,16 @@ class RepetitionComponent extends HTMLElement {
         position: relative;
       }
 
-      .errors {
+      .errors-container {
         display: none;
         color: red;
       }
 
-      :host(.errors) .errors {
+      .container.errors .errors-container {
         display: block;
       }
 
-      :host(.empty) .action-wrapper, :host(.errors) .action-wrapper, :host(.loading) .action-wrapper   {
+      .container.empty .action-wrapper, .container.errors .action-wrapper, .container.loading .action-wrapper   {
         display: none;
       }
 
@@ -81,10 +81,11 @@ class RepetitionComponent extends HTMLElement {
 
     shadowRoot.appendChild(style);
 
-    const container = document.createElement('div');
-    container.classList.add('container');
+    this.container = document.createElement('div');
+    this.container.classList.add('empty');
+    this.container.classList.add('container');
 
-    container.innerHTML = html`
+    this.container.innerHTML = html`
       <div class="action-wrapper">
         <i class="thumb-up action action-ok"></i>
       </div>
@@ -94,11 +95,11 @@ class RepetitionComponent extends HTMLElement {
       <div class="action-wrapper">
         <i class="thumb-down action action-nok"></i>
       </div>
-      <div class="errors"></div>
+      <div class="errors-container"></div>
       <deck-loader></deck-loader>
     `;
 
-    shadowRoot.appendChild(container);
+    shadowRoot.appendChild(this.container);
 
     /**
      * Leitner System boxes
@@ -117,16 +118,15 @@ class RepetitionComponent extends HTMLElement {
     });
 
     shadowRoot.querySelector('.stack-0').addEventListener('empty-stack', () => {
-      this.classList.add('empty');
+      this.container.classList.add('empty');
     });
 
     shadowRoot.querySelector('.stack-0').addEventListener('reload-collection', () => {
-      this.classList.remove('empty');
+      this.container.classList.remove('empty');
     });
   }
 
   /**
-   * mandatory `collection` attribute
    * name of the flashcard collection to retrieve & render
    * @type {String}
    */
@@ -147,7 +147,13 @@ class RepetitionComponent extends HTMLElement {
    */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'collection') {
-      this.updateCards();
+      if (this.collection) {
+        this.updateCards();
+      } else {
+        this.container.classList.remove('errors');
+        this.container.classList.add('empty');
+        this.renderCards('');
+      }
     }
   }
 
@@ -166,17 +172,17 @@ class RepetitionComponent extends HTMLElement {
    * @param {String} htmlContent - sanitized / trusted HTML to render
    */
   showErrors(htmlContent) {
-    const errors = this.shadowRoot.querySelector('.errors');
+    const errors = this.shadowRoot.querySelector('.errors-container');
     errors.innerHTML = htmlContent;
-    this.classList.add('errors');
-    this.classList.remove('loading');
+    this.container.classList.add('errors');
+    this.container.classList.remove('loading');
   }
 
   /**
-   * hides the `.errors` element
+   * hides the `.errors-container` element
    */
   closeErrors() {
-    this.classList.remove('errors');
+    this.container.classList.remove('errors');
   }
 
   /**
@@ -188,14 +194,14 @@ class RepetitionComponent extends HTMLElement {
     // TODO: async?
     const loader = this.shadowRoot.querySelector('deck-loader');
     if (on) {
-      this.loadingTimeoutId = setTimeout(this.classList.add('loading'), 200);
+      this.loadingTimeoutId = setTimeout(this.container.classList.add('loading'), 200);
       loader.removeAttribute('paused');
       this.closeErrors();
     } else {
       clearTimeout(this.loadingTimeoutId);
       loader.setAttribute('paused', '');
-      this.classList.remove('loading');
-      this.classList.remove('empty');
+      this.container.classList.remove('loading');
+      this.container.classList.remove('empty');
     }
   }
 
@@ -204,7 +210,7 @@ class RepetitionComponent extends HTMLElement {
    * @type {Boolean}
    */
   get areCardsRendered() {
-    return !this.classList.contains('loading') && !this.classList.contains('errors');
+    return !this.container.classList.contains('loading') && !this.container.classList.contains('errors');
   }
 
   /**

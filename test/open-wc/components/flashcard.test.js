@@ -1,10 +1,10 @@
 import { html, fixture, expect, chai } from '@open-wc/testing';
 
-import { chaiDom } from '../utils/chai-dom/chai-dom.js';
+import { chaiDom } from '../../utils/chai-dom/chai-dom.js';
 
 chai.use(chaiDom);
 
-import '../../src/components/flashcard/flashcard.js';
+import '../../../src/components/flashcard/flashcard.js';
 
 describe('dc-flashcard component', () => {
   describe('Given: no initial slot / light DOM', () => {
@@ -23,7 +23,9 @@ describe('dc-flashcard component', () => {
       //    And: default question is an error
       expect(questionContent[0]).to.have.class('error');
       //    And: there isn't anything else in the question slot
-      expect(questionContent).to.have.length(1);
+      expect(questionContent).to.have.lengthOf(1);
+      // It’s recommended to always use .lengthOf instead of .length.
+      // see https://www.chaijs.com/api/bdd/#method_lengthof
     });
 
     it('show an error message in "answer"', async () => {
@@ -35,7 +37,7 @@ describe('dc-flashcard component', () => {
       //    And: default answer is an error
       expect(answerContent[0]).to.have.class('error');
       //    And: there isn't anything else in the answer slot
-      expect(answerContent).to.have.length(1);
+      expect(answerContent).to.have.lengthOf(1);
     });
   });
 
@@ -64,7 +66,7 @@ describe('dc-flashcard component', () => {
         const flashcardStyle = getComputedStyle(el.shadowRoot.querySelector('.flashcard'));
         expect(flashcardStyle)
           .to.have.property('transform')
-          .that.equal('none');
+          .that.equals('none');
       });
     };
 
@@ -77,7 +79,7 @@ describe('dc-flashcard component', () => {
 
       it('flashcard has been rotated by 180deg', async () => {
         const flashcardStyle = getComputedStyle(el.shadowRoot.querySelector('.flashcard'));
-        expect(flashcardStyle).to.have.property('transform').that.is.equal('matrix(1, 0, 0, 1, 0, 0)');
+        expect(flashcardStyle).to.have.property('transform').that.equals('matrix(1, 0, 0, 1, 0, 0)');
       });
     };
 

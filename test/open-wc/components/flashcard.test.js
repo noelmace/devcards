@@ -1,8 +1,4 @@
-import { html, fixture, expect, chai } from '@open-wc/testing';
-
-import { chaiDom } from '../../utils/chai-dom/chai-dom.js';
-
-chai.use(chaiDom);
+import { fixture, expect } from '@open-wc/testing';
 
 import '../../../src/components/flashcard/flashcard.js';
 
@@ -45,7 +41,7 @@ describe('dc-flashcard component', () => {
     let el;
 
     beforeEach(async () => {
-      el = await fixture(html`
+      el = await fixture(`
         <dc-flashcard>
           <p slot="question">
             A question?

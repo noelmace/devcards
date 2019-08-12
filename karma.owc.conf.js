@@ -11,6 +11,7 @@ module.exports = config => {
         //
         // npm run test -- --grep test/foo/bar.test.js
         // npm run test -- --grep test/bar/*
+        { pattern: 'test/utils/chai-plugins.js', type: 'module' },
         { pattern: config.grep ? config.grep : 'test/open-wc/**/*.test.js', type: 'module' },
       ],
       esm: {

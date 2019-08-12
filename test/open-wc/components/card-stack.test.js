@@ -1,9 +1,5 @@
-import { fixture, expect, chai, nextFrame } from '@open-wc/testing';
+import { fixture, expect } from '@open-wc/testing';
 import sinon from 'sinon';
-
-import { chaiDom } from '../../utils/chai-dom/chai-dom.js';
-
-chai.use(chaiDom);
 
 import '../../../src/components/card-stack/card-stack.js';
 
@@ -63,7 +59,7 @@ function testRenderCollection() {
 describe('dc-stack component', function() {
   describe('Given: no argument nor content', function() {
     beforeEach(async function() {
-      this.el = await fixture('<dc-stack></dc-stack');
+      this.el = await fixture('<dc-stack></dc-stack>');
     });
 
     testNoCollectionMsg();

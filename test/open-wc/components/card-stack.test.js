@@ -36,40 +36,40 @@ const collectionMock2 = [
   }
 ];
 
-function testNoCollectionMsg(el) {
-  it('a "no valid collection" message is shown', () => {
-    expect(el).shadowDom.to.equal('<div class="cards-stack"><p>No valid collection</p></div>');
-  });
-};
-
-/**
- * Use the this context for mocks
- * therefore, it needs that all beforeEach use anonymous functions instead of arrow functions
- * See https://github.com/mochajs/mocha/wiki/Shared-Behaviours
- * TODO: see if we can use context in a more modern way
- * See https://github.com/mochajs/mocha/issues/1856
- */
-function testRenderCollection(el, mock) {
-  it('render the collection using dc-flashcard', () => {
-    const cardsEl = el.shadowRoot.querySelectorAll('dc-flashcard');
-    expect(cardsEl).to.have.lengthOf(mock.length);
-    for (let i = 0; i < mock.length; i++) {
-      const questionSlotContent = cardsEl[i].querySelector('[slot="question"]').innerHTML.trim();
-      expect(questionSlotContent, `dc-card ${i}`).to.equals(mock[i].question);
-    }
-  });
-};
-
 describe.only('dc-stack component', () => {
 
   let mock, el;
+
+  function testNoCollectionMsg() {
+    it('a "no valid collection" message is shown', () => {
+      expect(el).shadowDom.to.equal('<div class="cards-stack"><p>No valid collection</p></div>');
+    });
+  };
+
+  /**
+   * Use the this context for mocks
+   * therefore, it needs that all beforeEach use anonymous functions instead of arrow functions
+   * See https://github.com/mochajs/mocha/wiki/Shared-Behaviours
+   * TODO: see if we can use context in a more modern way
+   * See https://github.com/mochajs/mocha/issues/1856
+   */
+  function testRenderCollection() {
+    it('render the collection using dc-flashcard', () => {
+      const cardsEl = el.shadowRoot.querySelectorAll('dc-flashcard');
+      expect(cardsEl).to.have.lengthOf(mock.length);
+      for (let i = 0; i < mock.length; i++) {
+        const questionSlotContent = cardsEl[i].querySelector('[slot="question"]').innerHTML.trim();
+        expect(questionSlotContent, `dc-card ${i}`).to.equals(mock[i].question);
+      }
+    });
+  };
 
   describe('Given: no argument nor content', () => {
     beforeEach(async () => {
       el = await fixture('<dc-stack></dc-stack');
     });
 
-    testNoCollectionMsg(el);
+    testNoCollectionMsg();
 
     describe('When: an initial collection is given', () => {
 
@@ -78,7 +78,7 @@ describe.only('dc-stack component', () => {
         el.collection = mock;
       });
 
-      testRenderCollection(el, mock);
+      testRenderCollection();
 
       describe('When: an new collection is given', () => {
         beforeEach(() => {
@@ -86,7 +86,7 @@ describe.only('dc-stack component', () => {
           el.collection = mock;
         });
 
-        testRenderCollection(el, mock);
+        testRenderCollection();
       });
     });
 
@@ -95,7 +95,7 @@ describe.only('dc-stack component', () => {
         el.collection = 'bad';
       });
 
-      testNoCollectionMsg(el);
+      testNoCollectionMsg();
     });
 
     describe('When: an empty collection is given', () => {
@@ -103,7 +103,7 @@ describe.only('dc-stack component', () => {
         el.collection = [];
       });
 
-      testNoCollectionMsg(el);
+      testNoCollectionMsg();
     });
   });
 });

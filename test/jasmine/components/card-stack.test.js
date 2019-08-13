@@ -2,35 +2,7 @@ import { waitForComponent } from '../../utils/rendering.js';
 
 import '../../../src/components/card-stack/card-stack.js';
 
-const collectionMock = [
-  {
-    question: 'fooo',
-    answer: '<ul><li>bar</li><li>baz</li></ul>'
-  },
-  {
-    question: '<p>foo p</p>',
-    answer: '<div>bar</div>'
-  },
-  {
-    question: 'Foo',
-    answer: '<div>bar</div>'
-  }
-];
-
-const collectionMock2 = [
-  {
-    question: 'lorem',
-    answer: '<ul><li>ipsum</li><li>lorem</li></ul>'
-  },
-  {
-    question: '<p>lorem p</p>',
-    answer: '<div>impsum</div>'
-  },
-  {
-    question: 'lorem',
-    answer: 'ipsum'
-  }
-];
+import { collectionMock, collectionMock2 } from '../../mocks/collection.js';
 
 const TAG_NAME = 'dc-stack';
 

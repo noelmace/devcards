@@ -1,4 +1,6 @@
-import { chaiDom } from './chai-dom/chai-dom.js';
-import { chai } from '@bundled-es-modules/chai';
+import { chai as chaiEsm } from '@bundled-es-modules/chai';
 
-chai.use(chaiDom);
+window.chai = chaiEsm;
+
+import('chai-dom');
+import('sinon-chai');

@@ -6,12 +6,12 @@ module.exports = config => {
   config.set(
     merge(createDefaultConfig(config), {
       files: [
+        { pattern: 'test/utils/chai-plugins.js', type: 'module' },
         // runs all files ending with .test in the src folder,
         // can be overwritten by passing a --grep flag. examples:
         //
         // npm run test -- --grep test/foo/bar.test.js
         // npm run test -- --grep test/bar/*
-        { pattern: 'test/utils/chai-plugins.js', type: 'module' },
         { pattern: config.grep ? config.grep : 'test/open-wc/**/*.test.js', type: 'module' },
       ],
       esm: {

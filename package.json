@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm run owc:test; npm run vanilla-test; npm run jasmine-test",
     "build-docs": "jsdoc -c .jsdoc.conf.json",
+    "build-docs:dev": "jsdoc -c .jsdoc.conf.json -p -d ./dev-doc/api",
     "start": "browser-sync start --server --files 'src' 'index.html' 'data'",
     "vanilla-test": "karma start karma.owc.conf.js --coverage --grep 'test/vanilla-chai/**/*.test.js'",
     "jasmine-test": "karma start karma.jasmine.conf.js --coverage",

@@ -119,7 +119,6 @@ class CardStackComponent extends HTMLElement {
     `;
     emptyBox.querySelector('.reload').addEventListener('click', () => {
       this.render(this._collection);
-      this.currentDeck = this._collection;
       this.dispatchEvent(this.reloadFromCollectionEvent);
     });
     this.container.appendChild(emptyBox);
@@ -153,7 +152,6 @@ class CardStackComponent extends HTMLElement {
       if(Array.isArray(newValue) && newValue.length > 0) {
         this.render(newValue);
         this._collection = newValue;
-        this.currentDeck = this._collection;
       } else {
         this.renderNoCollection();
         this._collection = null;
@@ -168,13 +166,14 @@ class CardStackComponent extends HTMLElement {
     }
     this.container.innerHTML = cards
       .map(
-        card => html`
+        card => `
           <div class="card-wrapper">
             ${cardHtml(card)}
           </div>
         `
       )
       .join('');
+    this.currentDeck = cards;
   }
 }
 

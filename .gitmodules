@@ -1,3 +1,0 @@
-[submodule "test/chai-dom"]
-	path = test/utils/chai-dom
-	url = https://gist.github.com/56113345cb4fd5d45f636ac6c7c3637b.git

@@ -110,7 +110,9 @@ class RepetitionComponent extends HTMLElement {
 
     shadowRoot.querySelector('.action-ok').addEventListener('click', () => {
       const poped = shadowRoot.querySelector('.stack-0').pop();
-      this.boxes[1] = [...this.boxes, poped.card];
+      // FIXME: double data
+      this.boxes[0].pop();
+      this.boxes[1] = [...this.boxes[1], poped.card];
     });
 
     shadowRoot.querySelector('.action-nok').addEventListener('click', () => {
@@ -146,14 +148,8 @@ class RepetitionComponent extends HTMLElement {
    * @private
    */
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'collection') {
-      if (this.collection) {
-        this.updateCards();
-      } else {
-        this.container.classList.remove('errors');
-        this.container.classList.add('empty');
-        this.renderCards('');
-      }
+    if (name === 'collection' && oldValue !== newValue) {
+      this.updateCards(newValue);
     }
   }
 
@@ -210,23 +206,31 @@ class RepetitionComponent extends HTMLElement {
    * @type {Boolean}
    */
   get areCardsRendered() {
-    return !this.container.classList.contains('loading') && !this.container.classList.contains('errors');
+    return !this.container.classList.contains('loading') && !this.container.classList.contains('errors') && this._renderedCollection === this.collection;
   }
 
   /**
    * fetch & render the collection of flashcards
    * @private
    */
-  async updateCards() {
+  async updateCards(collectionName) {
+    let collection;
     this.isLoading();
-    try {
-      this.boxes[0] = await this.fetchCards(this.collection);
-    } catch (e) {
-      this.showErrors(html`
-        <p>No flashcard could be found for the ${this.collection} collection.</p>
-      `);
+    if (collectionName) {
+      try {
+        collection = this.boxes[0] = await this.fetchCards(collectionName);
+      } catch (e) {
+        this.showErrors(html`
+          <p>No flashcard could be found for the ${collectionName} collection.</p>
+        `);
+      }
+    } else {
+      this.container.classList.remove('errors');
+      this.container.classList.add('empty');
+      collection = '';
     }
-    this.renderCards(this.boxes[0]);
+    this.renderCards(collection);
+    this._renderedCollection = collectionName;
     this.isLoading(false);
   }
 

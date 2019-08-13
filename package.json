@@ -12,7 +12,7 @@
     "jasmine-test": "karma start karma.jasmine.conf.js --coverage",
     "jasmine-test:watch": "karma start karma.jasmine.conf.js --auto-watch=true --single-run=false",
     "owc:test": "karma start karma.owc.conf.js --coverage",
-    "owc:test:watch": "karma start karma.owc.conf.js --auto-watch=true --single-run=false --coverage --verbose=false",
+    "owc:test:watch": "karma start karma.owc.conf.js --auto-watch=true --single-run=false --coverage --verbose=false --timeout 100000",
     "owc:test:update-snapshots": "karma start karma.owc.conf.js --update-snapshots",
     "owc:test:prune-snapshots": "karma start karma.owc.conf.js --prune-snapshots",
     "owc:test:compatibility": "karma start karma.owc.conf.js --compatibility all --coverage",

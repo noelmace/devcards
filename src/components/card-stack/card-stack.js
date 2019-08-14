@@ -122,7 +122,6 @@ class CardStackComponent extends HTMLElement {
       this.dispatchEvent(this.reloadFromCollectionEvent);
     });
     this.container.appendChild(emptyBox);
-    this.classList.add('empty');
   }
 
   renderNoCollection() {

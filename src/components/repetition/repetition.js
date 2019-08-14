@@ -9,14 +9,26 @@ class RepetitionComponent extends HTMLElement {
   constructor() {
     super();
 
-    let resolveUpdate;
+    let resolve;
 
     this._updatePromise = new Promise(res => {
-      resolveUpdate = res;
+      resolve = res;
     });
 
-    const shadowRoot = this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open' });
 
+    /**
+     * Leitner System boxes
+     * @private
+     */
+    this._boxes = [[], [], []];
+
+    this._initialRender();
+
+    resolve();
+  }
+
+  static get _styles() {
     const style = document.createElement('style');
     style.textContent = css`
       .container {
@@ -84,8 +96,11 @@ class RepetitionComponent extends HTMLElement {
         background-image: url("${new URL('./thumb-down.svg', import.meta.url).toString()}");
       }
     `;
+    return style;
+  }
 
-    shadowRoot.appendChild(style);
+  _initialRender() {
+    this.shadowRoot.appendChild(RepetitionComponent._styles);
 
     this.container = document.createElement('div');
     this.container.classList.add('empty');
@@ -105,35 +120,26 @@ class RepetitionComponent extends HTMLElement {
       <deck-loader></deck-loader>
     `;
 
-    shadowRoot.appendChild(this.container);
+    this.shadowRoot.appendChild(this.container);
 
-    /**
-     * Leitner System boxes
-     * @private
-     * @see {@link https://en.wikipedia.org/wiki/Leitner_system}
-     */
-    this.boxes = [[], [], []];
-
-    shadowRoot.querySelector('.action-ok').addEventListener('click', () => {
-      const poped = shadowRoot.querySelector('.stack-0').pop();
+    this.shadowRoot.querySelector('.action-ok').addEventListener('click', () => {
+      const poped = this.shadowRoot.querySelector('.stack-0').pop();
       // FIXME: double data
-      this.boxes[0].pop();
-      this.boxes[1] = [...this.boxes[1], poped.card];
+      this._boxes[0].pop();
+      this._boxes[1] = [...this._boxes[1], poped.card];
     });
 
-    shadowRoot.querySelector('.action-nok').addEventListener('click', () => {
-      shadowRoot.querySelector('.stack-0').moveBack();
+    this.shadowRoot.querySelector('.action-nok').addEventListener('click', () => {
+      this.shadowRoot.querySelector('.stack-0').moveBack();
     });
 
-    shadowRoot.querySelector('.stack-0').addEventListener('empty-stack', () => {
+    this.shadowRoot.querySelector('.stack-0').addEventListener('empty-stack', () => {
       this.container.classList.add('empty');
     });
 
-    shadowRoot.querySelector('.stack-0').addEventListener('reload-collection', () => {
+    this.shadowRoot.querySelector('.stack-0').addEventListener('reload-collection', () => {
       this.container.classList.remove('empty');
     });
-
-    resolveUpdate(true);
   }
 
   /**
@@ -155,6 +161,14 @@ class RepetitionComponent extends HTMLElement {
   }
 
   /**
+   * Leitner System boxes
+   * @see {@link https://en.wikipedia.org/wiki/Leitner_system}
+   */
+  get boxes() {
+    return [[...this._boxes[0]], [...this._boxes[1]], [...this._boxes[2]]];
+  }
+
+  /**
    * @private
    */
   static get observedAttributes() {
@@ -167,16 +181,7 @@ class RepetitionComponent extends HTMLElement {
    */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'collection' && oldValue !== newValue) {
-      const previousUpdate = this.updateComplete || Promise.resolve();
-      let resolve, reject;
-      this._updatePromise = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-      });
-      previousUpdate
-        .then(() => this.updateCards(newValue))
-        .then(() => resolve())
-        .catch((e) => reject(e));
+      this._enqueueUpdate(this._updateCards(newValue));
     }
   }
 
@@ -186,7 +191,7 @@ class RepetitionComponent extends HTMLElement {
    */
   connectedCallback() {
     if (!this.areCardsRendered) {
-      this.updateCards();
+      this._enqueueUpdate(this._updateCards());
     }
   }
 
@@ -195,7 +200,7 @@ class RepetitionComponent extends HTMLElement {
    * @param {String} htmlContent - sanitized / trusted HTML to render
    * @private
    */
-  showErrors(htmlContent) {
+  _renderErrors(htmlContent) {
     const errors = this.shadowRoot.querySelector('.errors-container');
     errors.innerHTML = htmlContent;
     this.container.classList.add('errors');
@@ -206,7 +211,7 @@ class RepetitionComponent extends HTMLElement {
    * hides the `.errors-container` element
    * @private
    */
-  closeErrors() {
+  _closeErrors() {
     this.container.classList.remove('errors');
   }
 
@@ -215,13 +220,12 @@ class RepetitionComponent extends HTMLElement {
    * @private
    * @param {Boolean} [on=true] - value to set the loading state to
    */
-  isLoading(on = true) {
-    // TODO: async?
+  _setLoader(on = true) {
     const loader = this.shadowRoot.querySelector('deck-loader');
     if (on) {
       this.loadingTimeoutId = setTimeout(this.container.classList.add('loading'), 200);
       loader.removeAttribute('paused');
-      this.closeErrors();
+      this._closeErrors();
     } else {
       clearTimeout(this.loadingTimeoutId);
       loader.setAttribute('paused', '');
@@ -246,14 +250,14 @@ class RepetitionComponent extends HTMLElement {
    * fetch & render the collection of flashcards
    * @private
    */
-  async updateCards(collectionName) {
+  async _updateCards(collectionName) {
     let collection;
-    this.isLoading();
+    this._setLoader();
     if (collectionName) {
       try {
-        collection = await this.fetchCards(collectionName);
+        collection = await this._fetchCards(collectionName);
       } catch (e) {
-        this.showErrors(html`
+        this._renderErrors(html`
           <p>No flashcard could be found for the ${collectionName} collection.</p>
         `);
       }
@@ -262,10 +266,30 @@ class RepetitionComponent extends HTMLElement {
       this.container.classList.add('empty');
       collection = '';
     }
-    this.renderCards(collection);
-    this.boxes[0] = collection ? [...collection] : [];
+    this.shadowRoot.querySelector('.stack-0').collection = collection;
+    this._boxes[0] = collection ? [...collection] : [];
     this._renderedCollection = collectionName;
-    this.isLoading(false);
+    this._setLoader(false);
+  }
+
+  /**
+   * @param {Promise} update
+   * @private
+   */
+  async _enqueueUpdate(update) {
+    const previousUpdate = this.updateComplete || Promise.resolve();
+    let resolve, reject;
+    this._updatePromise = new Promise((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    try {
+      await previousUpdate;
+      await update;
+      resolve();
+    } catch (err) {
+      reject(err);
+    }
   }
 
   /**
@@ -274,7 +298,7 @@ class RepetitionComponent extends HTMLElement {
    * @param {string} topic the name of the json file to retrieve
    * @returns {Array.<Card> | null} cards in the json file, or null if no card could be found
    */
-  async fetchCards(topic) {
+  async _fetchCards(topic) {
     const req = new Request(`/data/${topic}.json`);
     let cards = null;
 
@@ -288,15 +312,6 @@ class RepetitionComponent extends HTMLElement {
     }
 
     return cards;
-  }
-
-  /**
-   * render cards objects as `<dc-flashcard>` components in the `.flashcards-container` element
-   * @private
-   * @param {Array.<Card>} cards the card objects to render
-   */
-  renderCards(cards) {
-    this.shadowRoot.querySelector('.stack-0').collection = cards;
   }
 }
 

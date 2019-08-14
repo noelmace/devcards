@@ -1,6 +1,5 @@
 import { fixture, expect, elementUpdated } from '@open-wc/testing';
 
-// todo: stub dc-stack
 import '../../../src/components/repetition/repetition.js';
 import { mockResponse200, mockResponse404 } from '../../utils/http.js';
 
@@ -96,6 +95,68 @@ describe('dc-repetition component', function() {
           });
         });
       });
+
+      describe(`When: an 'empty-stack' event is dispatched by a child component`, function() {
+        beforeEach(async function() {
+          this.el.shadowRoot.querySelector('.stack-0').dispatchEvent(new CustomEvent('empty-stack'));
+          await elementUpdated(this.el);
+        })
+
+        it(`action buttons shouldn't be displayed`, function() {
+          expect(this.el.shadowRoot).to.have.descendant('.container').that.has.class('empty');
+         const actionWrappers = this.el.shadowRoot.querySelectorAll('.action-wrapper');
+          [...actionWrappers].forEach((action) => {
+            const actionDisplay = getComputedStyle(action).display;
+            expect(actionDisplay).to.equal('none');
+            //// chai-dom gives a falls negative here
+            //// it looks like it doesn't use computed style
+            //// this isn't ralted to the loop
+            //// see https://github.com/nathanboktae/chai-dom/issues/22
+            // expect(action).not.to.be.displayed;
+            //// equals ''
+            // expect(action.style.display).to.equal('none');
+          })
+        })
+
+        describe(`When: the current stack is empty`, function() {
+          beforeEach(async function() {
+            this.el.shadowRoot.querySelector('.stack-0').dispatchEvent(new CustomEvent('empty-stack'));
+            await elementUpdated(this.el);
+          })
+
+          it(`action buttons shouldn't be displayed`, function() {
+            expect(this.el.shadowRoot).to.have.descendant('.container').that.has.class('empty');
+           const actionWrappers = this.el.shadowRoot.querySelectorAll('.action-wrapper');
+            [...actionWrappers].forEach((action) => {
+              const actionDisplay = getComputedStyle(action).display;
+              expect(actionDisplay).to.equal('none');
+              //// chai-dom gives a falls negative here
+              //// it looks like it doesn't use computed style
+              //// this isn't ralted to the loop
+              //// see https://github.com/nathanboktae/chai-dom/issues/22
+              // expect(action).not.to.be.displayed;
+              //// equals ''
+              // expect(action.style.display).to.equal('none');
+            })
+          })
+
+          describe(`When: the current stack is reloaded`, function() {
+            beforeEach(async function() {
+              this.el.shadowRoot.querySelector('.stack-0').dispatchEvent(new CustomEvent('reload-collection'));
+              await elementUpdated(this.el);
+            })
+
+            it(`action buttons should be displayed`, function() {
+              expect(this.el.shadowRoot).to.have.descendant('.container').that.not.has.class('empty');
+             const actionWrappers = this.el.shadowRoot.querySelectorAll('.action-wrapper');
+              [...actionWrappers].forEach((action) => {
+                const actionDisplay = getComputedStyle(action).display;
+                expect(actionDisplay).not.to.equal('none');
+              })
+            })
+          })
+        })
+      })
     });
 
     describe('When: an invalid collection name is given', function() {

@@ -9,6 +9,12 @@ class RepetitionComponent extends HTMLElement {
   constructor() {
     super();
 
+    let resolveUpdate;
+
+    this._updatePromise = new Promise(res => {
+      resolveUpdate = res;
+    });
+
     const shadowRoot = this.attachShadow({ mode: 'open' });
 
     const style = document.createElement('style');
@@ -126,6 +132,8 @@ class RepetitionComponent extends HTMLElement {
     shadowRoot.querySelector('.stack-0').addEventListener('reload-collection', () => {
       this.container.classList.remove('empty');
     });
+
+    resolveUpdate(true);
   }
 
   /**
@@ -134,6 +142,16 @@ class RepetitionComponent extends HTMLElement {
    */
   get collection() {
     return this.getAttribute('collection');
+  }
+
+  /**
+   * inspired by lit-element
+   * @see {@link https://github.com/Polymer/lit-element/blob/v2.2.1/src/lib/updating-element.ts#L729-L746}
+   * @returns {Promise.<Boolean>} The Promise returns a boolean that indicates if the
+   * update resolved without triggering another update.
+   */
+  get updateComplete() {
+    return this._updatePromise;
   }
 
   /**
@@ -149,7 +167,16 @@ class RepetitionComponent extends HTMLElement {
    */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'collection' && oldValue !== newValue) {
-      this.updateCards(newValue);
+      const previousUpdate = this.updateComplete || Promise.resolve();
+      let resolve, reject;
+      this._updatePromise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      previousUpdate
+        .then(() => this.updateCards(newValue))
+        .then(() => resolve())
+        .catch((e) => reject(e));
     }
   }
 
@@ -166,6 +193,7 @@ class RepetitionComponent extends HTMLElement {
   /**
    * show an HTML error message in the `.error` element
    * @param {String} htmlContent - sanitized / trusted HTML to render
+   * @private
    */
   showErrors(htmlContent) {
     const errors = this.shadowRoot.querySelector('.errors-container');
@@ -176,6 +204,7 @@ class RepetitionComponent extends HTMLElement {
 
   /**
    * hides the `.errors-container` element
+   * @private
    */
   closeErrors() {
     this.container.classList.remove('errors');
@@ -183,7 +212,7 @@ class RepetitionComponent extends HTMLElement {
 
   /**
    * set the loading state of the component
-   *
+   * @private
    * @param {Boolean} [on=true] - value to set the loading state to
    */
   isLoading(on = true) {
@@ -206,7 +235,11 @@ class RepetitionComponent extends HTMLElement {
    * @type {Boolean}
    */
   get areCardsRendered() {
-    return !this.container.classList.contains('loading') && !this.container.classList.contains('errors') && this._renderedCollection === this.collection;
+    return (
+      !this.container.classList.contains('loading') &&
+      !this.container.classList.contains('errors') &&
+      this._renderedCollection === this.collection
+    );
   }
 
   /**

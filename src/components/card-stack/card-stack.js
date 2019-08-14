@@ -150,7 +150,7 @@ class CardStackComponent extends HTMLElement {
     // cards collections are considered immutable
     if (prop === 'collection' && oldValue !== newValue) {
       if(Array.isArray(newValue) && newValue.length > 0) {
-        this.render(newValue);
+        this.render([...newValue]);
         this._collection = newValue;
       } else {
         this.renderNoCollection();

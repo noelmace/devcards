@@ -62,6 +62,10 @@ describe('dc-repetition component', function() {
 
       testCardsRendering(collectionMock);
 
+      it(`the collection and the collection in dc-stack are'nt the same instance`, function() {
+        expect(this.el.shadowRoot).to.have.descendant('.stack-0').that.have.property('collection').that.not.equal(this.el.boxes[0]);
+      });
+
       describe('When: a button is clicked', function() {
         beforeEach(function() {
           this.firstStackEl = this.el.shadowRoot.querySelector('.stack-0');

@@ -218,7 +218,7 @@ class RepetitionComponent extends HTMLElement {
     this.isLoading();
     if (collectionName) {
       try {
-        collection = this.boxes[0] = await this.fetchCards(collectionName);
+        collection = await this.fetchCards(collectionName);
       } catch (e) {
         this.showErrors(html`
           <p>No flashcard could be found for the ${collectionName} collection.</p>
@@ -230,6 +230,7 @@ class RepetitionComponent extends HTMLElement {
       collection = '';
     }
     this.renderCards(collection);
+    this.boxes[0] = collection ? [...collection] : [];
     this._renderedCollection = collectionName;
     this.isLoading(false);
   }

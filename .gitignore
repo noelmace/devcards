@@ -63,3 +63,6 @@ typings/
 # jsdoc docs
 docs/
 dev-doc/api/
+
+## IDE
+.vscode/

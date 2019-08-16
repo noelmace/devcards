@@ -31,6 +31,7 @@
     "@open-wc/testing-karma": "^3.1.15",
     "@open-wc/testing-karma-bs": "^1.1.40",
     "browser-sync": "^2.26.7",
+    "chai": "^4.2.0",
     "chai-dom": "^1.8.1",
     "jasmine": "^3.4.0",
     "jsdoc": "^3.6.3",

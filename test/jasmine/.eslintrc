@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "../../package.json"
+  ],
+  "globals": {
+    "expect": "readonly",
+    "jasmine": "readonly"
+  }
+}

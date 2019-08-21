@@ -17,7 +17,13 @@
     "owc:test:prune-snapshots": "karma start karma.owc.conf.js --prune-snapshots",
     "owc:test:compatibility": "karma start karma.owc.conf.js --compatibility all --coverage",
     "owc:test:compatibility:watch": "karma start karma.owc.conf.js --compatibility all --auto-watch=true --single-run=false",
-    "owc:test:bs": "karma start karma.owc.bs.config.js --compatibility all --coverage"
+    "owc:test:bs": "karma start karma.owc.bs.config.js --compatibility all --coverage",
+    "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore",
+    "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
+    "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
+    "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier"
   },
   "author": {
     "name": "Noël Macé",
@@ -40,6 +46,36 @@
     "prettier": "1.18.2",
     "sinon": "^7.4.1",
     "sinon-chai": "^3.3.0",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "eslint": "^6.1.0",
+    "@open-wc/eslint-config": "^1.0.0",
+    "@open-wc/prettier-config": "^0.1.10",
+    "husky": "^1.0.0",
+    "lint-staged": "^8.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@open-wc/eslint-config",
+      "eslint-config-prettier"
+    ],
+    "rules": {
+      "no-plusplus": [
+        "error",
+        { "allowForLoopAfterthoughts": true }
+      ]
+    }
+  },
+  "prettier": "@open-wc/prettier-config",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   }
 }

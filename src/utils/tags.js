@@ -17,7 +17,8 @@ export function css(strings, ...keys) {
   }
   if (strings.length > keys.length) {
     return acc + strings[strings.length - 1];
-  } else if (keys.length > strings.length) {
+  }
+  if (keys.length > strings.length) {
     return acc + keys[keys.length - 1];
   }
   return acc;

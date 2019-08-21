@@ -6,7 +6,8 @@ import '../../../src/components/card-stack/card-stack.js';
 import { collectionMock, collectionMock2 } from '../../mocks/collection.js';
 
 describe('dc-stack component', () => {
-  let el, mock;
+  let el;
+  let mock;
 
   const testNoCollectionMsg = () => {
     it('a "no valid collection" message is shown', () => {
@@ -18,7 +19,9 @@ describe('dc-stack component', () => {
     it('render the collection using dc-flashcard', () => {
       const cardsEl = el.shadowRoot.querySelectorAll('dc-flashcard');
       expect(cardsEl).to.have.lengthOf(mock.length);
-      const renderedQuestions = [...cardsEl].map(elmt => elmt.querySelector('[slot="question"]').innerHTML.trim());
+      const renderedQuestions = [...cardsEl].map(elmt =>
+        elmt.querySelector('[slot="question"]').innerHTML.trim(),
+      );
       const mockQuestions = mock.map(card => card.question);
       expect(renderedQuestions).to.deep.equal(mockQuestions);
     });
@@ -40,10 +43,8 @@ describe('dc-stack component', () => {
       testRenderCollection();
 
       describe('When: pop() is called', () => {
-        let popped;
-
         beforeEach(() => {
-          popped = el.pop();
+          el.pop();
         });
 
         it('the last card is removed from the current deck', () => {
@@ -79,7 +80,9 @@ describe('dc-stack component', () => {
           it('a message is rendered', () => {
             expect(el.shadowRoot)
               .to.have.descendant('.empty-box > p')
-              .that.have.text('You finished this session! Click the reload button to review this collection again.');
+              .that.have.text(
+                'You finished this session! Click the reload button to review this collection again.',
+              );
           });
 
           it('a reload button is rendered', () => {

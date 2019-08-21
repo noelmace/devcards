@@ -132,7 +132,7 @@ class FlashcardComponent extends HTMLElement {
       </slot>
     `;
 
-    this.addEventListener('click', e => {
+    this.addEventListener('click', () => {
       this.flip();
     });
 

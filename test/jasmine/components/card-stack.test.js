@@ -7,11 +7,14 @@ import { collectionMock, collectionMock2 } from '../../mocks/collection.js';
 const TAG_NAME = 'dc-stack';
 
 describe('dc-stack component', () => {
-  let el, mock;
+  let el;
+  let mock;
 
   function testNoCollectionMsg() {
     it('a "no valid collection" message is shown', () => {
-      expect(el.shadowRoot.querySelector('.cards-stack').innerHTML.trim()).toBe('<p>No valid collection</p>');
+      expect(el.shadowRoot.querySelector('.cards-stack').innerHTML.trim()).toBe(
+        '<p>No valid collection</p>',
+      );
     });
   }
 
@@ -26,7 +29,9 @@ describe('dc-stack component', () => {
     it('render the collection using dc-flashcard', () => {
       const cardsEl = el.shadowRoot.querySelectorAll('dc-flashcard');
       expect(cardsEl.length).toBe(mock.length);
-      const renderedQuestions = [...cardsEl].map(elmt => elmt.querySelector('[slot="question"]').innerHTML.trim());
+      const renderedQuestions = [...cardsEl].map(elmt =>
+        elmt.querySelector('[slot="question"]').innerHTML.trim(),
+      );
       const mockQuestions = mock.map(card => card.question);
       expect(renderedQuestions).toEqual(mockQuestions);
     });
@@ -67,7 +72,7 @@ describe('dc-stack component', () => {
           expect(lastFlashcardEl).toEqual(mock[mock.length - 2].question);
         });
 
-        it(`the collection hasn't changed`, function() {
+        it(`the collection hasn't changed`, () => {
           expect(el.collection).toEqual(mock);
         });
 
@@ -82,35 +87,34 @@ describe('dc-stack component', () => {
           });
 
           it('a message is rendered', () => {
-            expect(el.shadowRoot.querySelector('.empty-box > p').innerText.trim())
-              .toEqual('You finished this session! Click the reload button to review this collection again.');
+            expect(el.shadowRoot.querySelector('.empty-box > p').innerText.trim()).toEqual(
+              'You finished this session! Click the reload button to review this collection again.',
+            );
           });
 
           it('a reload button is rendered', () => {
-            expect(el.shadowRoot.querySelector('i.reload'))
-              .not.toBeNull();
+            expect(el.shadowRoot.querySelector('i.reload')).not.toBeNull();
           });
 
           it('one "empty-stack" event is fired', () => {
             expect(emptyStackEventSpy).toHaveBeenCalledTimes(1);
-          })
+          });
 
           describe('When: click on the reload button', () => {
             let reloadFromCollectionEventSpy;
 
             beforeEach(() => {
-              reloadFromCollectionEventSpy = jasmine.createSpy()
+              reloadFromCollectionEventSpy = jasmine.createSpy();
               el.addEventListener('reload-collection', reloadFromCollectionEventSpy);
-              el.shadowRoot.querySelector('i.reload').click()
-            })
+              el.shadowRoot.querySelector('i.reload').click();
+            });
 
             it('one "empty-stack" event is fired ', () => {
-              expect(reloadFromCollectionEventSpy).toHaveBeenCalledTimes(1)
-            })
+              expect(reloadFromCollectionEventSpy).toHaveBeenCalledTimes(1);
+            });
 
-            testRenderCollection()
-          })
-
+            testRenderCollection();
+          });
         });
       });
 
@@ -146,7 +150,9 @@ describe('dc-stack component', () => {
         it(`the card that have been moved isn't flipped`, () => {
           expect(flippedCard.hasAttribute('flipped')).toBe(false);
           expect(
-            el.shadowRoot.querySelector('.card-wrapper:first-child [slot="question"]').hasAttribute('flipped')
+            el.shadowRoot
+              .querySelector('.card-wrapper:first-child [slot="question"]')
+              .hasAttribute('flipped'),
           ).toBe(false);
         });
       });

@@ -255,7 +255,7 @@ class RepetitionComponent extends HTMLElement {
     this._setLoader();
     if (collectionName) {
       try {
-        collection = await this._fetchCards(collectionName);
+        collection = await RepetitionComponent._fetchCards(collectionName);
       } catch (e) {
         this._renderErrors(html`
           <p>No flashcard could be found for the ${collectionName} collection.</p>
@@ -278,7 +278,8 @@ class RepetitionComponent extends HTMLElement {
    */
   async _enqueueUpdate(update) {
     const previousUpdate = this.updateComplete || Promise.resolve();
-    let resolve, reject;
+    let resolve;
+    let reject;
     this._updatePromise = new Promise((res, rej) => {
       resolve = res;
       reject = rej;
@@ -298,7 +299,7 @@ class RepetitionComponent extends HTMLElement {
    * @param {string} topic the name of the json file to retrieve
    * @returns {Array.<Card> | null} cards in the json file, or null if no card could be found
    */
-  async _fetchCards(topic) {
+  static async _fetchCards(topic) {
     const req = new Request(`/data/${topic}.json`);
     let cards = null;
 

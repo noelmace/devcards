@@ -98,8 +98,8 @@ class DeckLoader extends HTMLElement {
    * @type {Number}
    */
   get interval() {
-    const interval = Number.parseInt(this.getAttribute('interval'));
-    if (interval && !isNaN(interval)) {
+    const interval = Number.parseInt(this.getAttribute('interval'), 10);
+    if (interval && !Number.isNaN(interval)) {
       return interval;
     }
     return 500;
@@ -158,7 +158,7 @@ class DeckLoader extends HTMLElement {
     if (!this.animationIntervalId) {
       this.animationIntervalId = setInterval(
         () => this.deckGen.next().value.classList.toggle('deployed'),
-        this.interval
+        this.interval,
       );
     }
   }

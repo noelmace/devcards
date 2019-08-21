@@ -65,13 +65,13 @@ class CardStackComponent extends HTMLElement {
     this.emptyStackEvent = new CustomEvent('empty-stack', {
       bubbles: false,
       cancelable: false,
-      composed: true
+      composed: true,
     });
 
     this.reloadFromCollectionEvent = new CustomEvent('reload-collection', {
       bubbles: false,
       cancelable: false,
-      composed: true
+      composed: true,
     });
 
     this.renderNoCollection();
@@ -148,7 +148,7 @@ class CardStackComponent extends HTMLElement {
   propertyChangedCallback(prop, oldValue, newValue) {
     // cards collections are considered immutable
     if (prop === 'collection' && oldValue !== newValue) {
-      if(Array.isArray(newValue) && newValue.length > 0) {
+      if (Array.isArray(newValue) && newValue.length > 0) {
         this.render([...newValue]);
         this._collection = newValue;
       } else {
@@ -169,7 +169,7 @@ class CardStackComponent extends HTMLElement {
           <div class="card-wrapper">
             ${cardHtml(card)}
           </div>
-        `
+        `,
       )
       .join('');
     this.currentDeck = cards;

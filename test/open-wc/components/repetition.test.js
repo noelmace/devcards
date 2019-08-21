@@ -1,13 +1,15 @@
 import { fixture, expect, elementUpdated } from '@open-wc/testing';
 
 import '../../../src/components/repetition/repetition.js';
+import sinon from 'sinon';
 import { mockResponse200, mockResponse404 } from '../../utils/http.js';
 
 import { collectionMock } from '../../mocks/collection.js';
-import sinon from 'sinon';
 
 describe('dc-repetition component', () => {
-  let fetchStub, mockCollectionName, el;
+  let fetchStub;
+  let mockCollectionName;
+  let el;
 
   beforeEach(() => {
     fetchStub = sinon.stub(window, 'fetch');
@@ -91,7 +93,11 @@ describe('dc-repetition component', () => {
           it('first card is moved to the next box', () => {
             expect(el)
               .to.have.property('boxes')
-              .that.deep.equals([collectionMock.slice(0, -1), [collectionMock[collectionMock.length - 1]], []]);
+              .that.deep.equals([
+                collectionMock.slice(0, -1),
+                [collectionMock[collectionMock.length - 1]],
+                [],
+              ]);
           });
         });
 
@@ -120,12 +126,12 @@ describe('dc-repetition component', () => {
           [...actionWrappers].forEach(action => {
             const actionDisplay = getComputedStyle(action).display;
             expect(actionDisplay).to.equal('none');
-            //// chai-dom gives a falls negative here
-            //// it looks like it doesn't use computed style
-            //// this isn't ralted to the loop
-            //// see https://github.com/nathanboktae/chai-dom/issues/22
+            // // chai-dom gives a falls negative here
+            // // it looks like it doesn't use computed style
+            // // this isn't ralted to the loop
+            // // see https://github.com/nathanboktae/chai-dom/issues/22
             // expect(action).not.to.be.displayed;
-            //// equals ''
+            // // equals ''
             // expect(action.style.display).to.equal('none');
           });
         });
@@ -144,19 +150,21 @@ describe('dc-repetition component', () => {
             [...actionWrappers].forEach(action => {
               const actionDisplay = getComputedStyle(action).display;
               expect(actionDisplay).to.equal('none');
-              //// chai-dom gives a falls negative here
-              //// it looks like it doesn't use computed style
-              //// this isn't ralted to the loop
-              //// see https://github.com/nathanboktae/chai-dom/issues/22
+              // // chai-dom gives a falls negative here
+              // // it looks like it doesn't use computed style
+              // // this isn't ralted to the loop
+              // // see https://github.com/nathanboktae/chai-dom/issues/22
               // expect(action).not.to.be.displayed;
-              //// equals ''
+              // // equals ''
               // expect(action.style.display).to.equal('none');
             });
           });
 
           describe(`When: the current stack is reloaded`, () => {
             beforeEach(async () => {
-              el.shadowRoot.querySelector('.stack-0').dispatchEvent(new CustomEvent('reload-collection'));
+              el.shadowRoot
+                .querySelector('.stack-0')
+                .dispatchEvent(new CustomEvent('reload-collection'));
               await elementUpdated(el);
             });
 

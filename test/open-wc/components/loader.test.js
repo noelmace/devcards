@@ -50,7 +50,6 @@ describe('deck-loader component', () => {
   });
 
   describe('Given: an interval of 200ms', () => {
-
     const interval = 200;
 
     beforeEach(async () => {
@@ -60,22 +59,27 @@ describe('deck-loader component', () => {
     describe('When: we wait for "interval" + 50ms', () => {
       beforeEach(async () => {
         await aTimeout(interval + 50);
-      })
+      });
 
       it('last card be repositionned by an animation', () => {
         const lastCardStyle = getComputedStyle(el.shadowRoot.querySelector('.card:last-child'));
 
-        expect(lastCardStyle).to.have.property('transform').that.matches(/^matrix\(/);
+        expect(lastCardStyle)
+          .to.have.property('transform')
+          .that.matches(/^matrix\(/);
       });
 
       it(`penultimate card shouldn't have any animation`, () => {
-        const lastCardStyle = getComputedStyle(el.shadowRoot.querySelector('.card:nth-last-child(2)'));
+        const lastCardStyle = getComputedStyle(
+          el.shadowRoot.querySelector('.card:nth-last-child(2)'),
+        );
 
-        expect(lastCardStyle).to.have.property('transform').that.equals('none');
+        expect(lastCardStyle)
+          .to.have.property('transform')
+          .that.equals('none');
       });
-
-    })
-  })
+    });
+  });
 
   describe('Given: interval set to 2s', () => {
     beforeEach(async () => {

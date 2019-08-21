@@ -24,8 +24,8 @@ module.exports = config => {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-setuid-sandbox']
-      }
+        flags: ['--no-sandbox', '--disable-setuid-sandbox'],
+      },
     },
 
     plugins: [
@@ -39,7 +39,7 @@ module.exports = config => {
       require.resolve('karma-spec-reporter'),
 
       // fallback: resolve any karma- plugins
-      'karma-*'
+      'karma-*',
     ],
 
     frameworks: ['esm', 'source-map-support', 'jasmine'],
@@ -50,8 +50,9 @@ module.exports = config => {
       babelModernExclude: ['**/node_modules/jasmine/**/*', '**/node_modules/karma-jasmine/**/*'],
       polyfills: {
         webcomponents: true,
-        fetch: true
-      }
+        fetch: true,
+      },
+      nodeResolve: true,
     },
 
     reporters: coverage ? ['spec', 'coverage-istanbul'] : ['spec'],
@@ -74,9 +75,9 @@ module.exports = config => {
           statements: 80,
           branches: 80,
           functions: 80,
-          lines: 80
-        }
-      }
+          lines: 80,
+        },
+      },
     },
 
     files: [
@@ -85,14 +86,11 @@ module.exports = config => {
       //
       // npm run test -- --grep test/foo/bar.test.js
       // npm run test -- --grep test/bar/*
-      { pattern: config.grep ? config.grep : 'test/jasmine/**/*.test.js', type: 'module' }
+      { pattern: config.grep ? config.grep : 'test/jasmine/**/*.test.js', type: 'module' },
     ],
-    esm: {
-      nodeResolve: true
-    },
 
     autoWatch: false,
     singleRun: true,
-    concurrency: Infinity
+    concurrency: Infinity,
   });
 };

@@ -14,17 +14,17 @@ module.exports = config => {
         //
         // npm run test -- --grep test/foo/bar.test.js
         // npm run test -- --grep test/bar/*
-        { pattern: config.grep ? config.grep : 'test/open-wc/**/*.test.js', type: 'module' }
+        { pattern: config.grep ? config.grep : 'test/open-wc/**/*.test.js', type: 'module' },
       ],
       esm: {
-        nodeResolve: true
+        nodeResolve: true,
       },
       client: {
         mocha: {
-          timeout
-        }
-      }
-    })
+          timeout,
+        },
+      },
+    }),
   );
   return config;
 };

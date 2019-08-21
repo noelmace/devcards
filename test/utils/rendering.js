@@ -8,17 +8,18 @@
  * @license MIT
  * @see {@link https://github.com/pietmichal/how-to-test-web-component/blob/9d6d013/src/test-utils.js#L41-L58}
  */
-export const waitForComponentToRender = async (tag) => new Promise(resolve => {
-  function requestComponent() {
-    const element = document.querySelector(tag);
-    if (element) {
-      resolve(element);
-    } else {
-      window.requestAnimationFrame(requestComponent);
+export const waitForComponentToRender = async tag =>
+  new Promise(resolve => {
+    function requestComponent() {
+      const element = document.querySelector(tag);
+      if (element) {
+        resolve(element);
+      } else {
+        window.requestAnimationFrame(requestComponent);
+      }
     }
-  }
-  requestComponent();
-});
+    requestComponent();
+  });
 
 /**
  * Resolves after requestAnimationFrame.
@@ -56,7 +57,7 @@ export function nextFrame() {
  * @param {string} tag WC tag name
  * @returns {Promise<HTMLElement>} Promise that resolved after WC is defined & requestAnimationFrame
  */
-export const waitForComponent = async (tag) => {
+export const waitForComponent = async tag => {
   await customElements.whenDefined(tag);
   await nextFrame();
   return document.querySelector(tag);

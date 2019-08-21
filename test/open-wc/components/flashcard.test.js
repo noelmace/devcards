@@ -56,7 +56,7 @@ describe('dc-flashcard component', () => {
     const testNoRotation = () => {
       it('the flipped property is false', () => {
         expect(el).to.have.property('flipped').that.is.false;
-      })
+      });
 
       it(`flashcard isn't rotated`, async () => {
         const flashcardStyle = getComputedStyle(el.shadowRoot.querySelector('.flashcard'));
@@ -71,45 +71,47 @@ describe('dc-flashcard component', () => {
     const testRotation = () => {
       it('the flipped property is true', () => {
         expect(el).to.have.property('flipped').that.is.true;
-      })
+      });
 
       it('flashcard has been rotated by 180deg', async () => {
         const flashcardStyle = getComputedStyle(el.shadowRoot.querySelector('.flashcard'));
-        expect(flashcardStyle).to.have.property('transform').that.equals('matrix(1, 0, 0, 1, 0, 0)');
+        expect(flashcardStyle)
+          .to.have.property('transform')
+          .that.equals('matrix(1, 0, 0, 1, 0, 0)');
       });
     };
 
     describe('When: the flipped attribute is added', () => {
       beforeEach(() => {
         el.setAttribute('flipped', '');
-      })
+      });
 
-      testRotation()
+      testRotation();
     });
 
     describe('When: the flip method is called', () => {
       beforeEach(() => {
         el.flip();
-      })
+      });
 
-      testRotation()
+      testRotation();
     });
 
     describe('When: the flip method is called twice', () => {
       beforeEach(() => {
         el.flip();
         el.flip();
-      })
+      });
 
-      testNoRotation()
+      testNoRotation();
     });
 
     describe('When: click on the card', () => {
       beforeEach(() => {
         el.click();
-      })
+      });
 
-      testRotation()
+      testRotation();
     });
   });
 });

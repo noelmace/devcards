@@ -9,7 +9,6 @@ module.exports = config => {
   config.set(
     merge(createDefaultConfig(config), {
       files: [
-        { pattern: 'test/utils/chai-plugins.js', type: 'module' },
         // runs all files ending with .test in the src folder,
         // can be overwritten by passing a --grep flag. examples:
         //

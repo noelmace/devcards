@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run owc:test; npm run vanilla-test; npm run jasmine-test",
-    "build-docs": "jsdoc -c .jsdoc.conf.json",
-    "build-docs:dev": "jsdoc -c .jsdoc.conf.json -p -d ./dev-doc/api",
+    "build:docs": "jsdoc -c .jsdoc.conf.json",
+    "build:docs:dev": "jsdoc -c .jsdoc.conf.json -p -d ./dev-doc/api",
+    "build:types": "tsc -p tsconfig.json",
     "start": "browser-sync start --server --files 'src' 'index.html' 'data'",
     "vanilla-test": "karma start karma.owc.conf.js --coverage --grep 'test/vanilla-chai/**/*.test.js'",
     "jasmine-test": "karma start karma.jasmine.conf.js --coverage",
@@ -51,7 +52,8 @@
     "@open-wc/eslint-config": "^1.0.0",
     "@open-wc/prettier-config": "^0.1.10",
     "husky": "^1.0.0",
-    "lint-staged": "^8.0.0"
+    "lint-staged": "^8.0.0",
+    "typescript-temporary-fork-for-jsdoc": "^3.6.0-insiders.20190802"
   },
   "eslintConfig": {
     "extends": [
@@ -61,7 +63,9 @@
     "rules": {
       "no-plusplus": [
         "error",
-        { "allowForLoopAfterthoughts": true }
+        {
+          "allowForLoopAfterthoughts": true
+        }
       ]
     }
   },

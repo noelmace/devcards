@@ -1,5 +1,6 @@
 import { css, html } from '../../utils/tags.js';
 import { cardHtml } from '../flashcard/flashcard.js';
+/** @typedef { import('../flashcard/flashcard').Card } Card */
 
 /**
  * Web Component representing a stacked flashcard deck
@@ -81,14 +82,14 @@ class CardStackComponent extends HTMLElement {
    * **Immutable** collection of cards
    * Updating this property will cause this component to render **all** its content.
    * Do so **only** if you need to load an entire new collection of cards!
-   * @type {Array.<Cards>}
+   * @type {Array.<Card>}
    */
   set collection(collection) {
     this.propertyChangedCallback('collection', this._collection, collection);
   }
 
   /**
-   * @type {Array.<Cards>}
+   * @type {Array.<Card>}
    */
   get collection() {
     return this._collection;

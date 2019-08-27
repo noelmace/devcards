@@ -2,6 +2,9 @@ import '../card-stack/card-stack.js';
 import '../loader/loader.js';
 import { css, html } from '../../utils/tags.js';
 
+/** @typedef { import('../card-stack/card-stack').CardStackComponent } CardStackComponent */
+/** @typedef { import('../flashcard/flashcard').Card } Card */
+
 /**
  * Main component for spaced repetition
  */
@@ -25,6 +28,7 @@ class RepetitionComponent extends HTMLElement {
 
     this._initialRender();
 
+    // @ts-ignore
     resolve();
   }
 
@@ -123,14 +127,18 @@ class RepetitionComponent extends HTMLElement {
     this.shadowRoot.appendChild(this.container);
 
     this.shadowRoot.querySelector('.action-ok').addEventListener('click', () => {
-      const poped = this.shadowRoot.querySelector('.stack-0').pop();
+      /** @type {CardStackComponent} */
+      const cardStack = this.shadowRoot.querySelector('.stack-0');
+      const poped = cardStack.pop();
       // FIXME: double data
       this._boxes[0].pop();
       this._boxes[1] = [...this._boxes[1], poped.card];
     });
 
     this.shadowRoot.querySelector('.action-nok').addEventListener('click', () => {
-      this.shadowRoot.querySelector('.stack-0').moveBack();
+      /** @type {CardStackComponent} */
+      const el = this.shadowRoot.querySelector('.stack-0');
+      el.moveBack();
     });
 
     this.shadowRoot.querySelector('.stack-0').addEventListener('empty-stack', () => {
@@ -223,7 +231,7 @@ class RepetitionComponent extends HTMLElement {
   _setLoader(on = true) {
     const loader = this.shadowRoot.querySelector('deck-loader');
     if (on) {
-      this.loadingTimeoutId = setTimeout(this.container.classList.add('loading'), 200);
+      this.loadingTimeoutId = setTimeout(() => this.container.classList.add('loading'), 200);
       loader.removeAttribute('paused');
       this._closeErrors();
     } else {
@@ -251,6 +259,7 @@ class RepetitionComponent extends HTMLElement {
    * @private
    */
   async _updateCards(collectionName) {
+    /** @type {Array.<Card>} */
     let collection;
     this._setLoader();
     if (collectionName) {
@@ -264,9 +273,11 @@ class RepetitionComponent extends HTMLElement {
     } else {
       this.container.classList.remove('errors');
       this.container.classList.add('empty');
-      collection = '';
+      collection = null;
     }
-    this.shadowRoot.querySelector('.stack-0').collection = collection;
+    /** @type {CardStackComponent} */
+    const cardStack = this.shadowRoot.querySelector('.stack-0');
+    cardStack.collection = collection;
     this._boxes[0] = collection ? [...collection] : [];
     this._renderedCollection = collectionName;
     this._setLoader(false);

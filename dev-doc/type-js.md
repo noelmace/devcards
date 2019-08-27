@@ -34,3 +34,7 @@ https://github.com/microsoft/TypeScript/pull/32372
 - https://jsdoc.app
 - https://medium.com/@trukrs/type-safe-javascript-with-jsdoc-7a2a63209b76
 - https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html#supported-jsdoc
+
+## issues
+
+- https://github.com/Microsoft/TypeScript/issues/10642

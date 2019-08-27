@@ -5,7 +5,7 @@ import { cardHtml } from '../flashcard/flashcard.js';
 /**
  * Web Component representing a stacked flashcard deck
  */
-class CardStackComponent extends HTMLElement {
+export class CardStackComponent extends HTMLElement {
   constructor() {
     super();
 

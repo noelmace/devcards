@@ -163,6 +163,7 @@ export class CardStackComponent extends HTMLElement {
   render(cards) {
     if (!this.currentDeck || cards.length !== this.currentDeck.length) {
       this.container.style.paddingTop = `${cards.length * 5}px`;
+      this.container.style.marginBottom = `${cards.length * 5}px`;
     }
     this.container.innerHTML = cards
       .map(

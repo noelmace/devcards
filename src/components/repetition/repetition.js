@@ -199,7 +199,7 @@ class RepetitionComponent extends HTMLElement {
    */
   connectedCallback() {
     if (!this.areCardsRendered) {
-      this._enqueueUpdate(this._updateCards());
+      this._enqueueUpdate(this._updateCards(this.collection));
     }
   }
 
@@ -231,11 +231,10 @@ class RepetitionComponent extends HTMLElement {
   _setLoader(on = true) {
     const loader = this.shadowRoot.querySelector('deck-loader');
     if (on) {
-      this.loadingTimeoutId = setTimeout(() => this.container.classList.add('loading'), 200);
+      this.loadingTimeoutId = this.container.classList.add('loading');
       loader.removeAttribute('paused');
       this._closeErrors();
     } else {
-      clearTimeout(this.loadingTimeoutId);
       loader.setAttribute('paused', '');
       this.container.classList.remove('loading');
       this.container.classList.remove('empty');

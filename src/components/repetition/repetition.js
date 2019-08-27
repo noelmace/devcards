@@ -33,6 +33,9 @@ class RepetitionComponent extends HTMLElement {
   }
 
   static get _styles() {
+    // @ts-ignore
+    const metaUrl = import.meta.url;
+
     const style = document.createElement('style');
     style.textContent = css`
       .container {
@@ -93,11 +96,11 @@ class RepetitionComponent extends HTMLElement {
       }
 
       i.thumb-up {
-        background-image: url("${new URL('./thumb-up.svg', import.meta.url).toString()}");
+        background-image: url("${new URL('./thumb-up.svg', metaUrl).toString()}");
       }
 
       i.thumb-down {
-        background-image: url("${new URL('./thumb-down.svg', import.meta.url).toString()}");
+        background-image: url("${new URL('./thumb-down.svg', metaUrl).toString()}");
       }
     `;
     return style;
@@ -237,7 +240,6 @@ class RepetitionComponent extends HTMLElement {
     } else {
       loader.setAttribute('paused', '');
       this.container.classList.remove('loading');
-      this.container.classList.remove('empty');
     }
   }
 
@@ -269,6 +271,7 @@ class RepetitionComponent extends HTMLElement {
           <p>No flashcard could be found for the ${collectionName} collection.</p>
         `);
       }
+      this.container.classList.remove('empty');
     } else {
       this.container.classList.remove('errors');
       this.container.classList.add('empty');
@@ -288,7 +291,9 @@ class RepetitionComponent extends HTMLElement {
    */
   async _enqueueUpdate(update) {
     const previousUpdate = this.updateComplete || Promise.resolve();
+    /** @type {(value?: any) => void} */
     let resolve;
+    /** @type {(reason?: any) => void} */
     let reject;
     this._updatePromise = new Promise((res, rej) => {
       resolve = res;
@@ -307,7 +312,7 @@ class RepetitionComponent extends HTMLElement {
    * fetch a flashcards json file
    * @private
    * @param {string} topic the name of the json file to retrieve
-   * @returns {Array.<Card> | null} cards in the json file, or null if no card could be found
+   * @returns {Promise.<Array.<Card>>} cards in the json file, or null if no card could be found
    */
   static async _fetchCards(topic) {
     const req = new Request(`/data/${topic}.json`);
@@ -315,6 +320,7 @@ class RepetitionComponent extends HTMLElement {
 
     const resp = await fetch(req);
     if (!resp.ok) {
+      // @ts-ignore
       throw new Error(resp.errors);
     }
     const data = await resp.json();

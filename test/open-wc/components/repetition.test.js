@@ -65,6 +65,17 @@ describe('dc-repetition component', () => {
 
       testCardsRendering(collectionMock);
 
+      it('action buttons should be displayed', () => {
+        expect(el.shadowRoot)
+          .to.have.descendant('.container')
+          .that.not.has.class('empty');
+        const actionWrappers = el.shadowRoot.querySelectorAll('.action-wrapper');
+        [...actionWrappers].forEach(action => {
+          const actionDisplay = getComputedStyle(action).display;
+          expect(actionDisplay).to.not.equal('none');
+        });
+      });
+
       it(`the collection and the collection in dc-stack are'nt the same instance`, () => {
         expect(el.shadowRoot)
           .to.have.descendant('.stack-0')

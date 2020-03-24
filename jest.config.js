@@ -136,7 +136,7 @@ module.exports = {
   // The test environment that will be used for testing
   // Use jsdom >= 14 in order to support custom elements
   // See https://github.com/jsdom/jsdom/issues/1030#issuecomment-486975679
-  testEnvironment: "jest-environment-jsdom-fifteen",
+  testEnvironment: "jest-environment-jsdom-sixteen",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},

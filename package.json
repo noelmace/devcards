@@ -36,7 +36,7 @@
     "document-register-element": "^1.14.1",
     "jasmine": "^3.4.0",
     "jest": "^24.8.0",
-    "jest-environment-jsdom-fifteen": "^1.0.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "karma-jasmine": "^2.0.1",
     "karma-spec-reporter": "0.0.32",
     "lit-html": "^1.1.1",
